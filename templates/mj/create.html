@@ -1,0 +1,77 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'mj/create.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Page title</title>
+</head>
+<body onload="time()">
+    
+    <section>
+        <div class="head">
+            <h3 class="day"></h3>
+            <div class="time">
+                <span class="hr"></span>
+                <span class="dot">:</span>
+                <span class="min"></span>
+            </div>  
+        </div>
+        <i class="fa-solid fa-flask"></i>
+    </section>
+    <main>
+      <form method=POST>
+        {% csrf_token %}
+       <div>
+        {{form.as_p}}
+       </div>
+
+       <button type="submit"> submit </button>
+        <div class="input">
+          
+            <textarea></textarea><br>
+            
+           <div class="oth">
+               
+            <label>Keyword <span class="star">*</span> : </label>
+            <input type="text"><br>
+           <div class="l">
+            <label class="l">Link-1 : </label>
+            <input type="text" class="i1"><br>
+            
+            <label class="l">Link-2 : </label>
+            <input type="text" class="i1">
+           </div>
+          </div>
+          
+            <div class="top">
+                <div class="submit">
+                    <i class="fa-solid fa-check-to-slot"></i>
+                    
+                </div>
+                <div class="sel-c">
+                    <input type="radio" id="blithe" name="class" value="Blithe" checked>                   
+<label for="blithe">Merry</label><br>
+
+<input type="radio" id="gloomy" name="class" value="Gloomy">
+<label for="gloomy">Gloomy</label><br>
+
+<input type="radio" id="covert" name="class" value="Covert">
+<label for="covert">Covert</label><br>
+
+
+                    
+                </div>
+            </div>
+           
+        </div>
+     </form>
+    </main>
+    
+    <script src="{% static 'mj/create.js' %}"></script>
+</body>
+</html>
