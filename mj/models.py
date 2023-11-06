@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 # Create your models here.
+    
 class Journal(models.Model):
     class Mood(models.TextChoices):
         merry = 'ME', _('Merry')
@@ -14,8 +15,8 @@ class Journal(models.Model):
 
     title = models.CharField(max_length=100)
     content = models.TextField()
-    link1 = models.URLField()
-    link2 = models.URLField()
+    link1 = models.URLField(blank=True, null=True)
+    link2 = models.URLField(blank=True, null=True)
     date_added = models.DateTimeField(default=timezone.now)
     mood_tag = models.CharField(max_length=2, choices=Mood.choices, default=Mood.merry)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -25,13 +26,16 @@ class Journal(models.Model):
 
     
     def get_absolute_url(self):
-        return reverse("j-detail", kwargs={"pk": self.pk})
+        return reverse("view-j", kwargs={"pk": self.pk})
 
     
 
-class link(models.Model):
-    link = models.URLField()
+# class link(models.Model):
+#     link = models.URLField()
 
-    def __str__(self):
-        pass
+#     def __str__(self):
+#         pass
 
+# class Covertuser(models.Model):
+#     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+#     pin = models.IntegerField()

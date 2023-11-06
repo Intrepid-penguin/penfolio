@@ -1,0 +1,50 @@
+{% extends 'mj/home.html' %}
+
+{% block content %}
+
+{% for result in results %}
+    {% if result.mood_tag == 'ME' %}
+                    
+    <div class="j1 s">
+        <a href="{% url 'view-j' result.id %}"> 
+            <div class="txt">
+                <h4>{{result.title}}</h4>
+                <div class="txt-b">
+                    <h2>{{result.date_added}}</h2>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+            </div> 
+        </a>
+    </div>
+
+    {% endif %}
+
+    {% if result.mood_tag == 'GL' %}
+        <div class="j1 c">
+            <a href="{% url 'view-j' result.id %}"> 
+                <div class="txt">
+                    <h4>{{result.title}}</h4>
+                    <div class="txt-b">
+                        <h2>{{result.date_added}}</h2>
+                        <i class="fa-solid fa-angle-right"></i>
+                    </div>
+                </div> 
+            </a>
+        </div>
+    {% endif %}
+
+{% empty %}
+    <h2> Sorry, no search result !</h2>
+        
+{% endfor %}
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}

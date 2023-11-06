@@ -1,0 +1,104 @@
+{% extends 'meta.html' %}
+
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'mj/home.css' %}">
+<link rel="stylesheet" href="{% static 'mj/header.css' %}">
+{% endblock css %}
+
+{% block body %}
+{% include 'mj/header.html' %}
+<section>
+    <form action="{% url 'search' %}" method="GET" value="{{request.GET.q}}" class="form">
+    <div class="search">
+        
+        <input type="text" name="q" id="" value="{{request.GET.q}}">
+        
+        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        
+    </div>
+    </form>
+
+    <div class="cform" open="false">
+        <form method="GET" action="{% url 'c-journals' %}" value="{{request.GET.pin}}">
+            <nav><button class="close" type="button">close</button> </nav>
+            {% for message in messages %}
+                <small>{{ message }}</small>
+            {% endfor %}
+            <h2>Enter pin to view your secret journal </h2>
+            <div class="input-s">
+                <input type="text" name="pin" value="{{request.GET.pin}}" />
+                <button type="submit">enter</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="books">
+        <a class="book" href="{% url 'm-journals' %}"><p>Merryy</p></a>
+        <a class="book" href="{% url 'g-journals' %}"><p>Gloomy</p></a>
+        <a class="book covert"><p>Covert</p></a>
+        
+    </div>
+
+    
+    <div class="journals">
+        {% block content %}
+        
+            {% for journal in journals %}
+                {% block j-content %}
+                    {% if journal.mood_tag == 'ME' %}
+                    
+                        <div class="j1 s">
+                            <a href="{% url 'view-j' journal.id %}"> 
+                                <div class="txt">
+                                    <h4>{{journal.title}}</h4>
+                                    <div class="txt-b">
+                                        <h2>{{journal.date_added}}</h2>
+                                        <i class="fa-solid fa-angle-right"></i>
+                                    </div>
+                                </div> 
+                            </a>
+                        </div>
+                
+                    {% endif %}
+                    {% if journal.mood_tag == 'GL' %}
+                        <div class="j1 c">
+                            <a href="{% url 'view-j' journal.id %}"> 
+                                <div class="txt">
+                                    <h4>{{journal.title}}</h4>
+                                    <div class="txt-b">
+                                        <h2>{{journal.date_added}}</h2>
+                                        <i class="fa-solid fa-angle-right"></i>
+                                    </div>
+                                </div> 
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endblock j-content %}
+
+            {% empty %}
+                <h2> Sorry, no journals in this category</h2>
+                    
+            {% endfor %}
+
+        {% endblock content %}    
+       
+        
+    </div>
+    
+    <footer>
+        <a href="{% url 'create-j' %}"><div class="foot-pen">
+            <i class="fa-solid fa-pen"></i>
+        </div></a>
+    </footer>
+    
+</section>
+{% endblock body %}
+{% block script %}
+<script src="{% static 'mj/home.js' %}"></script>
+{% endblock script %}
+{% comment %} {% for journal in journals %}
+    <h1>{{journal.title}}</h1>
+{% endfor %} {% endcomment %}
+    

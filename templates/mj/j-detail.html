@@ -1,0 +1,34 @@
+{% extends 'meta.html' %}
+{% load static %}
+
+{% block css %}
+   <link rel="stylesheet" href="{% static 'mj/details.css' %}" > 
+{% endblock css %}
+
+
+{% block body %}
+    <main>
+        <header>
+            <a href="{% url 'home' %}"><i class="fa-solid fa-flask"></i></a>
+            <h3>{{date}}</h3>
+        </header>
+        <section>
+            <a href="{% url 'update-j' journal.id%}"><div class=""><small>Update</small></div></a>
+            <article>
+                <div class="content">
+                    <h2>{{title}}</h2>
+                    <p>{{content}}</p>
+                </div>
+                <div class="links">
+                    <h3>Helpful Links</h3>
+                    <ul>
+                        <li><a href="{{link1}}">{{link1}}</a></li>
+                        <li><a href="{{link2}}">{{link2}}</a></li>
+                    </ul>
+                </div>
+            </article>
+        </section>
+    </main>
+{% endblock body %}
+    
+    

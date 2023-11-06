@@ -1,0 +1,16 @@
+{% extends 'mj/home.html' %}
+
+{% block j-content %}
+
+<div class="j1">
+    <a href="{% url 'view-j' journal.id %}"> 
+        <div class="txt">
+            <h4>{{journal.title}}</h4>
+            <div class="txt-b">
+                <h2>{{journal.date_added}}</h2>
+                <i class="fa-solid fa-angle-right"></i>
+            </div>
+        </div> 
+    </a>
+</div>
+{% endblock j-content %}
