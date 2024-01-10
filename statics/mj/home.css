@@ -44,7 +44,6 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* margin-top: 5rem; */
     width: 75%;
     background: rgb(255 255 255 / .7);
     border-radius: 1rem;
@@ -52,27 +51,27 @@ a {
     height: 2.5rem;
     padding-right: 1.5rem;
     cursor: pointer;
+    transition: all 1s ease-in-out;
 }
 
 .search i {
     display: grid;
     place-items: center;
     color: var(--grey) !important;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     width: 100%;
 }
 
 .fa-solid {
-    color: var(--grey) !important;
+    color: var(--grey);
 }
 
 .search button {
-    height: 100%;
-    width: 4rem;
     background: transparent;
     border: none;
     outline: none;
 }
+
 
 input {
     width: 80%;
@@ -84,6 +83,10 @@ input {
     color: var(--grey);
     background: transparent;
     padding-left: 2.5rem;
+}
+
+.search:hover {
+    border: 1px solid var(--grey);
 }
 
 .title {
@@ -222,6 +225,10 @@ footer {
     border-radius: 5rem 5rem 0 0;
 }
 
+footer i {
+    color: white !important;
+}
+
 .cform {
     background: rgb(0 0 0 /0.2);
     width: 100%;
@@ -274,6 +281,11 @@ footer {
 .cform input {
     background: rgb(255 255 255 / .2);
     width: 60%;
+    color: whitesmoke;
+}
+
+.cform input:hover {
+    border: 1px solid white;
 }
 
 .input-s{
@@ -292,6 +304,12 @@ footer {
     outline: none;
 }
 
+.highlight {
+    background: var(--grey);
+    padding-inline: .2rem;
+    color: var(--bg);
+}
+
 @media(max-width:780px){
     .title {
         padding-left: 1.5rem;
@@ -299,7 +317,8 @@ footer {
     
     .books > a{
         height: 10rem;
-        width: 6.5rem;
+        min-width: 6.5rem;
+        width: calc( 100% / 5);
     }
     .book > p {
         font-size: 1.3rem;
@@ -314,8 +333,8 @@ footer {
         right: 15%;
     }
 
-    .cform h2 {
-        font-size: 1rem;
+    h2 {
+        font-size: .95rem;
     }
     
 }

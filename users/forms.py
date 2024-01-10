@@ -15,4 +15,4 @@ class UserRegisterForm(UserCreationForm):
 class CovertuserForm(forms.ModelForm):
     class Meta:
         model = Covertuser
-        fields = ['pin']
+        fields = ['pin']       

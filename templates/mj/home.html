@@ -10,35 +10,32 @@
 {% block body %}
 {% include 'mj/header.html' %}
 <section>
-    <form action="{% url 'search' %}" method="GET" value="{{request.GET.q}}" class="form">
-    <div class="search">
-        
-        <input type="text" name="q" id="" value="{{request.GET.q}}">
-        
-        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-        
-    </div>
-    </form>
-
-    <div class="cform" open="false">
-        <form method="GET" action="{% url 'c-journals' %}" value="{{request.GET.pin}}">
-            <nav><button class="close" type="button">close</button> </nav>
+    
+    {% if messages %}
+        <div class="error-msg">
             {% for message in messages %}
-                <small>{{ message }}</small>
+                <p>{{ message }}</p>
             {% endfor %}
-            <h2>Enter pin to view your secret journal </h2>
-            <div class="input-s">
-                <input type="text" name="pin" value="{{request.GET.pin}}" />
-                <button type="submit">enter</button>
-            </div>
-        </form>
-    </div>
+        </div>
+    {% endif %}
+        
+    
+    <form action="{% url 'search' %}" method="GET" value="{{request.GET.q}}" class="form">
+        <div class="search">            
+            <input type="text" name="q" id="" value="{{request.GET.q}}">            
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>            
+        </div>
+    </form>
+    
+    {% block pinform %}
+        {% include 'mj/pin-input.html' %}
+    {% endblock pinform %}
+        
     
     <div class="books">
         <a class="book" href="{% url 'm-journals' %}"><p>Merryy</p></a>
         <a class="book" href="{% url 'g-journals' %}"><p>Gloomy</p></a>
-        <a class="book covert"><p>Covert</p></a>
-        
+        <a class="book covert"><p>Covert</p></a>   
     </div>
 
     
@@ -88,9 +85,11 @@
     </div>
     
     <footer>
-        <a href="{% url 'create-j' %}"><div class="foot-pen">
-            <i class="fa-solid fa-pen"></i>
-        </div></a>
+        <a href="{% url 'create-j' %}">
+            <div class="foot-pen">
+                <i class="fa-solid fa-pen"></i>
+            </div>
+        </a>
     </footer>
     
 </section>
@@ -98,7 +97,4 @@
 {% block script %}
 <script src="{% static 'mj/home.js' %}"></script>
 {% endblock script %}
-{% comment %} {% for journal in journals %}
-    <h1>{{journal.title}}</h1>
-{% endfor %} {% endcomment %}
     

@@ -10,11 +10,6 @@
     --bg: rgba(255,228,211,255);
 }
 
-html, body {
-    min-height: 100%;
-}
-
-
 a {
     all:unset;
 }
@@ -22,8 +17,9 @@ a {
 main {
     display: flex;
     align-items: flex-end;
-    height: inherit;
+    height: 100svh;
     background: var(--grey);
+    overflow: hidden;
 }
 
 header {
@@ -53,35 +49,124 @@ section {
     height: 90%;
     border-radius: 2rem 2rem 0 0;
     background: var(--bg);
+    color: var(--grey);
     width: 100%;
 }
 
-section > a {
+.btn {
     display: flex;
-    justify-content: center;
-    width: 10rem;
-    border-radius: 50%;
-    background: blue;
-    border-radius: 0 0 10rem 10rem;
-    /*margin-top: -2rem;*/
 }
 
-section > a div {
+section .btn >  a {
     display: flex;
     justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 5rem; 
+    width: 7rem;
     background: var(--red);
-    border-radius: 0 0 20rem 20rem;
+    align-items: center;
+    /* width: 100%; */
+    cursor: pointer;
+    height: 3rem; 
     color: rgb(255 255 255 / 0.8);
+}
+
+section .btn > a {
+    display: flex;
+    justify-content: center;  
+}
+
+section .btn > a  {
+    border-radius: 0 0 20rem 0rem;
     
+}
+
+section .btn > a:first-child {
+    border-radius: 0 0 0rem 20rem;
+    background: var(--bookb);
 }
 
 a small {
     font-size: 1rem;
     letter-spacing: .1rem;
+    margin-bottom: .5rem;
+}
+
+.update_txt {
+    margin-right: 0;
+    margin-left: 1.2rem;
+}
+
+a small:last-child {
+    margin-right: .5rem;
+}
+
+.confirm_modal {
+	display: flex;
+	position: absolute;
+	height: 100svh;
+	background: rgba(0 0 0 /.3);
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+}
+
+form {
+	background: white;
+	display: grid;
+    place-items: center;
+	padding: 1rem;
+	border-radius: 1rem;
+	width: 80%;
+	max-width: 38rem;
+}
+
+form h3 {
     margin-bottom: 1rem;
+    color: var(--grey);
+}
+
+.modal_btn {
+	display: flex;
+	gap: 1.5rem;
+	justify-content: space-around;
+	width: 100%;
+    
+}
+
+
+.modal_btn > button, .modal_btn > a {
+	padding: .5rem;
+	outline: none;
+    border: 1px solid var(--grey);
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.modal_btn button {
+    background: var(--red);
+}
+
+.modal_btn a {
+    background: var(--grey);
+    font-size: .9rem;
+}
+
+.modal_btn > button:hover, .modal_btn > a:hover {
+    background: transparent;
+}
+
+.modal_btn > button:hover {
+    color: var(--red);
+    border: 2px solid var(--red);
+}
+
+.modal_btn > a:last-child:hover {
+    color: var(--grey);
+    border: 2px solid var(--grey);
+}
+
+.confirm_modal[data-opened="false"] {
+    display: none;
 }
 
 article {

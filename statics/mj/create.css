@@ -77,6 +77,7 @@ section h3 {
 main {
     background: var(--col);
     margin-top: 3rem;
+    position: absolute;
     bottom: 0;
     width: 100%;
     height: auto;
@@ -111,6 +112,10 @@ input[type="text"] {
     margin-bottom: 1.3rem;
     outline: none;
     color: var(--grey);
+}
+
+textarea {
+    resize: none;
 }
 
 .i1 {

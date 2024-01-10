@@ -1,0 +1,12 @@
+<div class="cform" open="false" display="{{ display }}">
+    <form method="POST" action="{% url 'c-journals' %}" autocomplete="off">
+        {% csrf_token %}
+        <nav><button class="close" type="button">close</button></nav>
+        <h2>Enter pin to view your secret journal </h2>
+        <div class="input-s">
+            {{ form.pin }}
+            <!-- <input type="text" name="pin" value="{{request.GET.pin}}" /> -->
+            <button type="submit">enter</button>
+        </div>
+    </form>
+</div>

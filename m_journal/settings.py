@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mj',
     'users',
+    'todos',
+    'blog',
     
     #3rd party packages
     'widget_tweaks'

@@ -6,10 +6,10 @@ from django.dispatch import receiver
 # Create your models here.
 class Covertuser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='covertuser')
-    pin = models.IntegerField(default=1234)
+    pin = models.CharField(max_length=500)
     
     def __str__(self):
-        return self.user
+        return self.user.username
     
 @receiver(post_save, sender=User)
 def create_covertuser(sender, instance, created, **kwargs):

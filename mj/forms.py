@@ -24,7 +24,8 @@ class journalform(forms.ModelForm):
         model = Journal
         fields = ['title', 'content', 'link1', 'link2', 'mood_tag']
         
- 
-        
+class Pinform(forms.Form):
+    """Pinform definition."""
+    pin = forms.CharField(min_length=4 ,max_length=10, label='pin')
     
     

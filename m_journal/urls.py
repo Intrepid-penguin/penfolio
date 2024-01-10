@@ -24,5 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
     path('signup/', users_views.register, name='sign-up'),
-    path('', include('mj.urls'))
+    path('logout/', users_views.Logout, name='log-out'),
+    path('', include('mj.urls')),
+    path('todos/', include('todos.urls'))
 ] + static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)

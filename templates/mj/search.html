@@ -1,14 +1,15 @@
 {% extends 'mj/home.html' %}
+{% load search %}
 
 {% block content %}
 
 {% for result in results %}
-    {% if result.mood_tag == 'ME' %}
+    {% if result.mood_tag == 'ME' or result.mood_tag == 'GL' %}
                     
-    <div class="j1 s">
+    <div class="j1 {% if result.mood_tag == 'ME' %}s{% endif %} {% if result.mood_tag == 'GL' %}c{% endif %}">
         <a href="{% url 'view-j' result.id %}"> 
             <div class="txt">
-                <h4>{{result.title}}</h4>
+                <h4>{{result.title|highlight:request.GET.q}}</h4>
                 <div class="txt-b">
                     <h2>{{result.date_added}}</h2>
                     <i class="fa-solid fa-angle-right"></i>
@@ -19,7 +20,7 @@
 
     {% endif %}
 
-    {% if result.mood_tag == 'GL' %}
+    <!-- {% if result.mood_tag == 'GL' %}
         <div class="j1 c">
             <a href="{% url 'view-j' result.id %}"> 
                 <div class="txt">
@@ -31,7 +32,7 @@
                 </div> 
             </a>
         </div>
-    {% endif %}
+    {% endif %} -->
 
 {% empty %}
     <h2> Sorry, no search result !</h2>

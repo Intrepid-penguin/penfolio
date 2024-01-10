@@ -1,0 +1,16 @@
+{% extends 'meta.html' %}
+
+
+{% block body %}
+    <section>
+        <ul>
+            {% for todo in todos %}
+                <li>{{ todo }} -- {{ todo.status}} -- {{ todo.tag }} -- {{todo.due_date}}</li>
+            {% endfor %}
+        </ul>
+        
+    </section> 
+{% endblock body %}
+    
+
+    
