@@ -5,7 +5,7 @@
     --bookb:rgb(100,149,237);
     --penb:rgb(79,134,247);
     --trans:rgb(0 0 0 / 0.2);
-    --grey:rgba(88,90,121,255);
+    --grey:rgba(30,32,50,255);
     --red:rgba(255,65,82,255);
     --bg: rgba(255,228,211,255);
 }
@@ -172,6 +172,7 @@ form h3 {
 article {
     height: 95%;
     width: 95%;
+    overflow-y: scroll;
 }
 
 .content {
@@ -181,10 +182,26 @@ article {
     width: 100%;
     min-height: 80%;
     padding: 1rem;
+    margin-bottom: 1.2rem;
+    /* color: black; */
 }
 
-.content h2 {
-    text-align: center;
+.content h1 {
+    font-weight: 900;
+    font-size: x-large;
+    /* text-align: center; */
+    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.content a {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+p {
+    font-weight: 500;
+    margin-top: .8rem;
 }
 
 

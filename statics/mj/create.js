@@ -35,3 +35,15 @@ Hours.innerHTML = hr
 Min.innerHTML = nmin + x
 setTimeout(time, 1000);
 }
+
+
+document.getElementById('preview-btn').addEventListener('click', function() {
+    var parentDiv = this.closest('div');
+    if (parentDiv.getAttribute('data-preview') === 'true') {
+        parentDiv.setAttribute('data-preview', 'false');
+        this.textContent = 'Preview';
+    } else {
+        parentDiv.setAttribute('data-preview', 'true');
+        this.textContent = 'Edit';
+    }
+});

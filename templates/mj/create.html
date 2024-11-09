@@ -3,6 +3,8 @@
 {% load widget_tweaks %}
 
 {% block css %}
+<link rel="stylesheet" href="{% static 'markdownx/admin/css/markdownx.css' %}">
+<script src="{% static 'markdownx/js/markdownx.js' %}"></script>
 <link rel="stylesheet" href="{% static 'mj/create.css' %}">
 {% endblock css %}
 
@@ -16,14 +18,15 @@
                 <span class="min"></span>
             </div>  
         </div>
-        <i class="fa-solid fa-flask"></i>
+        <a href="{% url 'home' %}" style="color: whitesmoke;"><i class="fa-solid fa-flask"></i></a>
     </section>
     <main>
-      <form method=POST>
+      <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-
-       
-        <div class="input">
+        
+        <div class="input" data-preview="false">
+            <button type="button" id="preview-btn">Preview</button>
+            
             {% render_field form.content type="text" class="content"%}<br>
             
            <div class="oth">
@@ -31,14 +34,15 @@
             <label>Title <span class="star">*</span> : </label>
             {% render_field form.title type="text"%}<br>
            <div class="l">
-            <label class="l">Link-1 : </label>
+            {% comment %} <label class="l">Link-1 : </label>
             {% render_field form.link1 type="text" class="i1" %}<br>
            
             
             <label class="l">Link-2 : </label>
-            {% render_field form.link2 type="text" class="i1" %}<br>
+            {% render_field form.link2 type="text" class="i1" %}<br> {% endcomment %}
            </div>
           </div>
+          
           
             <div class="top">
                 <div class="submit" type="submit">

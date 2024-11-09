@@ -8,7 +8,8 @@ from .views import(
                    GloomyJournal,
                    listCJournal,
                    Search,
-                   deleteJournal
+                   deleteJournal,
+                   custom_markdownx_upload
                 ) 
 
 urlpatterns = [
@@ -21,4 +22,5 @@ urlpatterns = [
     path('journals-g/', GloomyJournal.as_view(), name='g-journals'),
     path('journals-c/', listCJournal.as_view(), name='c-journals'),
     path('search/', Search.as_view(), name='search'),
+    path('markdownx/upload/', custom_markdownx_upload, name='markdownx_upload'),
 ]

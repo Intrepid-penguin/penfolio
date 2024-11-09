@@ -1,0 +1,112 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="en" x-data="{ pageTitle: Alpine.store('pageName') === 'login' ? 'Login Page' : 'Sign Up Page' }">
+<head>
+    <meta charset="UTF-8">
+    <title x-text="pageTitle">Page title</title>
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/focus@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="{% static 'mj/auth.css' %}">
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <main class="c">
+        
+        <section x-data="{signIn: Alpine.store('pageName') === 'login' ? true : false, signUp: Alpine.store('pageName') === 'signUp' ? true : false}" class="c">
+            <aside>
+                <a x-on:click.prevent="signIn = true; signUp = false; pageTitle = 'Login Page'; window.history.pushState({}, '', '/login')" tabindex="0" :data="signIn">Sign-in</a>
+                <a x-on:click.prevent="signIn = false; signUp = true; pageTitle = 'Sign Up Page'; window.history.pushState({}, '', '/signup')" tabindex="0" :data="signUp">Sign-up</a>
+            </aside>
+            
+            <div x-show="signIn" x-cloak x-transition class="sign-in">
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div>
+                        <label>Username or email</label>
+                        <input type="text" name="username" id="" value="{{form.data.username}}" required autocomplete="off">
+                    </div>
+                    
+                    <div>
+                        <label>Password</label>
+                        <input type="password" name="password" id="" value="{{form.data.password}}" required autocomplete="off">
+                    </div>
+
+                    <div>
+                        <small>{{ form.errors }}</small>
+                    </div>
+
+                    <div>
+                        <button type="submit">Sign-in</button>
+                        <small>Don't have an account? <a x-on:click="signIn = false; signUp = true; pageTitle = 'Sign Up Page'">Sign-up</a></small>
+                    </div>
+                    
+                </form>
+            </div>
+            
+            <div x-show="signUp" x-cloak x-transition class="sign-up">
+                <form method="POST" action="{% url 'sign-up' %}">
+                    {% csrf_token %}
+                    <div x-data="{value: ''}">
+                        <label :data="value.length == 0 ? true : false">Username</label>
+                        <input type="text" name="username" value="{{sign_up_form.data.username}}" id="" pattern="^.{4,}$" required />
+                    </div>
+                    
+                    <div>
+                        <label>Email</label>
+                        <input type="email" name="email" value="{{sign_up_form.data.email}}" required />
+
+                    </div>
+                    
+                    <div>
+                        <label>Password</label>
+                        <input type="password" name="password1" value="{{sign_up_form.data.password1}}" pattern="^(?=.*[A-Z])(?=.*[0-9]).{8,}$" required />
+
+                    </div>
+                    
+                    <div>
+                        <label>Confirm Password</label>
+                        <input type="password" name="password2" value="{{sign_up_form.data.password2}}" pattern="^(?=.*[A-Z])(?=.*[0-9]).{8,}$" required />
+                        
+                    </div>
+                    
+                    <div>
+                        <label>Pin</label>
+                        <input type="password" name="pin" value="{{pin_form.data.pin}}" pattern="^.{4,}$" required />
+                    </div>
+
+                    <div>
+                        <small>{{ sign_up_form.username.errors}}</small>
+                        <small>{{ pin_form.username.errors}}</small>
+                    </div>
+                    
+                    <div>
+                        <button type="submit">Sign-up</button>
+                        <small>Already have an account? <a x-on:click="signIn = true; signUp = false; pageTitle = 'Login Page'">Sign-in</a></small>
+                    </div>
+                </form>
+            </div>
+            
+        </section>
+        
+        
+    </main>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            const path = window.location.pathname;
+            
+            if (path.includes('signup')) {
+                Alpine.store('pageName', 'signUp');
+            } else {
+                Alpine.store('pageName', 'login');
+            }
+        });
+    </script>
+</body>
+</html>

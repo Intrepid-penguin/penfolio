@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-
+from markdownx.utils import markdownify
+from markdownx.models import MarkdownxField
 
 # Create your models here.
     
@@ -14,12 +15,14 @@ class Journal(models.Model):
         covert = 'CO', _('Covert')
 
     title = models.CharField(max_length=100)
-    content = models.TextField()
-    link1 = models.URLField(blank=True, null=True)
-    link2 = models.URLField(blank=True, null=True)
+    content = MarkdownxField()
     date_added = models.DateTimeField(default=timezone.now)
     mood_tag = models.CharField(max_length=2, choices=Mood.choices, default=Mood.merry)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    @property
+    def formatted_markdown(self):
+        return markdownify(self.content)
     
     def __str__(self):
         return self.title
@@ -27,15 +30,3 @@ class Journal(models.Model):
     
     def get_absolute_url(self):
         return reverse("view-j", kwargs={"pk": self.pk})
-
-    
-
-# class link(models.Model):
-#     link = models.URLField()
-
-#     def __str__(self):
-#         pass
-
-# class Covertuser(models.Model):
-#     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-#     pin = models.IntegerField()

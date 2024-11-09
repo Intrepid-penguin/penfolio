@@ -9,6 +9,9 @@ from django.contrib.auth.hashers import check_password
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+import cloudinary.uploader
+from markdownx.utils import markdownify
+from django.http import JsonResponse
 
 
 
@@ -62,10 +65,8 @@ class viewJournal(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context.update(
             title = self.object.title,
-            content = self.object.content,
+            content = self.object.formatted_markdown,
             date = self.object.date_added,
-            link1 = self.object.link1,
-            link2 = self.object.link2
          )
         return context
      
@@ -159,37 +160,26 @@ class Search(JournalBaseListView):
         return Journal.objects.filter(query).distinct()
     
  
-# class home(LoginRequiredMixin, ListView):
-#     model = Journal
-#     context_object_name = 'journals'
-#     fields = ['title', 'date_added', 'mood_tag']
-#     template_name = 'mj/home.html'
-    
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['form'] = Pinform()
-#         return context
-    
-#     def get_queryset(self):
-#         user = get_object_or_404(User, username=self.request.user)
-#         return Journal.objects.filter(owner=user).order_by('-date_added')
-# 
-# class MerryJournal(LoginRequiredMixin, ListView):
-#     model = Journal
-#     context_object_name = 'journals'
-#     fields = None
-#     template_name = 'mj/m-journal.html'
-    
-#     def get_queryset(self):
-#         user = get_object_or_404(User, username=self.request.user)
-#         return Journal.objects.filter(owner=user, mood_tag='ME').order_by('-date_added')
-    
-# class GloomyJournal(LoginRequiredMixin, ListView):
-#     model = Journal
-#     context_object_name = 'journals'
-#     fields = ['title', 'date_added']
-#     template_name = 'mj/g-journal.html'
-    
-#     def get_queryset(self):
-#         user = get_object_or_404(User, username=self.request.user)
-#         return Journal.objects.filter(owner=user, mood_tag='GL').order_by('-date_added')
+def custom_markdownx_upload(request):
+    if request.method == 'POST' and request.FILES.get('image'):
+        upload = request.FILES['image']
+        cloudinary.config(
+            cloud_name= 'dh9zsffcy',
+            api_key= '442972459732815',
+            api_secret= '13CWZag20_99j70upV8r8kU_8ns'
+        )
+
+        # Upload image to Cloudinary
+        result = cloudinary.uploader.upload(
+            upload,
+            transformation={
+                'width': 800,  # Set desired width
+                'height': 800,  # Set desired height
+                'crop': 'limit',  # Ensures the image is not stretched
+            }
+        )
+        # Get the secure URL of the uploaded image
+        image_url = result['secure_url']
+        # Return the URL in a format that Markdownx expects
+        return JsonResponse({'image_code': f'![alt text]({image_url})'})
+    return JsonResponse({'error': 'Upload failed'}, status=400)

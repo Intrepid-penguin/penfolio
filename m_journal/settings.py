@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 
+import os
+from dotenv import load_dotenv
+# Load environment variables from .env file
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -43,11 +48,15 @@ INSTALLED_APPS = [
     'blog',
     
     #3rd party packages
-    'widget_tweaks'
+    'widget_tweaks',
+    'markdownx',
+    'cloudinary_storage',
+    'cloudinary'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -123,9 +132,33 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
 STATIC_ROOT = 'static/'
 
 STATICFILES_DIRS = [BASE_DIR / 'statics'] 
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
+
+MARKDOWNX_MEDIA_PATH = 'markdownx/journal/'  # Custom path for uploaded files
+
+MARKDOWNX_UPLOAD_CONTENT_TYPES = ['image/jpeg', 'image/png', 'image/gif']  # Allowed file types
+
+MARKDOWNX_IMAGE_MAX_SIZE = {
+    'size': (1000, 1000),
+    'quality': 100
+}
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dh9zsffcy',
+    'API_KEY': '442972459732815',
+    'API_SECRET': '13CWZag20_99j70upV8r8kU_8ns'
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

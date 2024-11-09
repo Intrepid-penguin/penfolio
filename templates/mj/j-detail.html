@@ -21,10 +21,10 @@
             
             <article>
                 <div class="content">
-                    <h2>{{title}}</h2>
-                    <p>{{content}}</p>
+                    <h1>Title : {{title}}</h1>
+                    <div>{{content | safe}}</div>
                 </div>
-                <div class="links">
+                {% comment %} <div class="links">
                     {% if link1 == None and link2 == None  %}
                         <h3>No Helpful Link(s) provided</h3>
                     {% else %}
@@ -48,7 +48,7 @@
                     {% endif %}
                         
                     
-                </div>
+                </div> {% endcomment %}
             </article>
         </section>
         <div class="confirm_modal" data-opened="false"> 

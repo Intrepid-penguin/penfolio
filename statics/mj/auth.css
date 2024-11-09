@@ -1,0 +1,164 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    --bookb:rgb(100,149,237);
+    --penb:rgb(79,134,247);
+    --trans:rgb(0 0 0 / 0.2);
+    --grey:rgba(30,32,50,255);
+    --red:rgba(255,65,82,255);
+    --col:rgba(255,228,211,255);
+    /*border: 1px solid yellow;*/
+    /*border: 1px solid red;*/
+}
+
+
+
+.c {
+    display: grid;
+    place-items: center;
+}
+
+main {
+    height: 100lvh;
+    color: var(--grey);
+    background: var(--grey);
+}
+
+section {
+    width: 80%;
+    max-width: 500px;
+    padding: 1.5rem;
+    background: var(--col);
+    border-radius: .5rem;
+}
+
+aside {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 70%;
+    margin-bottom: 1rem;
+}
+
+aside a {
+    color: var(--bookb);
+    font-weight: bolder;
+    font-size: 1.2rem;
+    padding-inline: .5rem;
+    transition: all 2s ease;
+    cursor: pointer;
+}
+
+a[data="true"] {
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    outline: none;
+    border: none;
+}
+
+[x-cloak] { display: none !important; }
+
+.sign-in, .sign-up {
+    margin-top: 1rem;
+    display: grid;
+    place-items: center;
+    width: 100%;
+}
+
+/*form {
+    width: 100%;
+}*/
+
+form > div, form {
+    width: 100%;
+    position: relative;
+}
+
+label {
+    position: absolute;
+    top: .5rem;    
+    z-index: 1;
+}
+
+input[type="text"], input[type="password"], input[type="email"] {
+    height: 2rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    /*margin-top: 1.5rem;*/
+    position: relative;
+    background: transparent;
+    outline: none;
+    border: 0;
+    z-index: 2;
+    border-bottom: 1px solid var(--grey);
+}
+
+form > div:has(input:hover, input:focus, input:focus-within), form > div:has(input:valid), form > div:has(input:user-valid), form > div:has(input:user-invalid) {
+    margin-top: 1.5rem;
+}
+
+form > div:has(input:hover, input:focus, input:focus-within) label,form > div:has(input:valid) label,  form > div:has(input:user-valid) label, form > div:has(input:user-invalid) label{
+    top: -1.2rem;
+}
+
+form > div{
+    margin-bottom: 1rem;
+}
+
+input:user-valid {
+    border-bottom: 1px solid green;    
+}
+
+input:user-invalid {
+    border-bottom: 1px solid var(--red);
+}
+/*
+form > div:has(input:hover, input:focus, input:focus-within, input:valid)) {
+    margin-top: 1.5rem;
+}
+
+form > div:has(input:hover, input:focus, input:focus-within) label {
+    top: -1.2rem;
+}
+
+*/
+label[data="has"] {
+    background: red;
+}
+
+
+
+
+form > div:last-of-type {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    display: grid;
+}
+
+button {
+    background: var(--bookb);
+    height: 2rem;
+    width: 50%;
+    color: var(--col);
+    font-weight: bolder;
+    outline: none;
+    border: none;
+    margin-bottom: .5rem;
+    font-size: 1rem;
+    box-shadow: -1px 1px 10px 0 var(--grey);
+}
+
+button:hover {
+    box-shadow: -7px 5px 10px 0 var(--grey);
+}
+
+form > div:last-of-type a {
+    color: var(--bookb);
+}
+
+[x-cloak] { display: none !important; }
+
+
+
+
