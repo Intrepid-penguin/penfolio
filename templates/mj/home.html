@@ -75,7 +75,16 @@
                 {% endblock j-content %}
 
             {% empty %}
-                <h2> Sorry, no journals in this category</h2>
+                <h2> Sorry, no journal entry found 
+                {% if 'g' in request.path  %}
+                    in the Gloomy journal log.
+                {% elif 'm' in request.path%}
+                    in the Merry journal log.
+                {% elif 'c' in request.path%}
+                    in the Covert journal log.
+                {% else %}
+                    retry or make a new entry.
+                {% endif %}</h2>
                     
             {% endfor %}
 
