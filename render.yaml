@@ -10,4 +10,4 @@ services:
     name: m_journal
     runtime: python
     buildCommand: "./build.sh"
-    startCommand: "python -m gunicorn mysite.asgi:application -k uvicorn.workers.UvicornWorker"
+    startCommand: "python -m gunicorn m_journal.asgi:application -k uvicorn.workers.UvicornWorker"
