@@ -13,6 +13,9 @@ django-markdownx = "*"
 django-cloudinary-storage = {extras = ["video"], version = "*"}
 whitenoise = "*"
 python-dotenv = "*"
+psycopg2-binary = "*"
+dj-database-url = "*"
+uvicorn = "*"
 
 [dev-packages]
 

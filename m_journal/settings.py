@@ -14,6 +14,7 @@ from pathlib import Path
 
 import os
 from dotenv import load_dotenv
+import dj_database_url
 # Load environment variables from .env file
 load_dotenv()
 
@@ -30,7 +31,7 @@ SECRET_KEY = 'django-insecure-1sy1ze3do^=+v-u+(imw2enq7zt8mm2##!&drkk-%vj0un9i&=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'https://mjournal-production.up.railway.app']
 
 
 # Application definition
@@ -89,11 +90,17 @@ WSGI_APPLICATION = 'm_journal.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'dbm.sqlite3',
+#     }
+# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default='postgresql://my_rm_db_user:ffxP2REU0H7iz3Ickm6s4WgVbU6eMKaU@dpg-cu9enqjqf0us73bv19ig-a.oregon-postgres.render.com/my_rm_db',
+        conn_max_age=600
+    )
 }
 
 
@@ -135,7 +142,13 @@ STATIC_URL = 'static/'
 
 STATIC_ROOT = 'static/'
 
-STATICFILES_DIRS = [BASE_DIR / 'statics'] 
+STATICFILES_DIRS = [BASE_DIR / 'statics']
+
+if not DEBUG:    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
+    # and renames the files with unique names for each version to support long-term caching
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
