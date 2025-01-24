@@ -45,10 +45,13 @@ a {
     justify-content: space-between;
     align-items: center;
     width: 75%;
+    max-width: 25rem;
     background: rgb(255 255 255 / .7);
     border-radius: 1rem;
     white-space: nowrap;
-    height: 2.5rem;
+    height: 2.8rem;
+    border-style: dotted;
+    border: 2px solid var(--trans);
     padding-right: 1.5rem;
     cursor: pointer;
     transition: all 1s ease-in-out;
@@ -260,7 +263,7 @@ footer i {
 
 .cform form {
     background: var(--grey);
-    width: 70%;
+    width: 50%;
     height: 12rem;
     padding-block: 3.5rem;
     border-radius: 1rem;
@@ -304,6 +307,8 @@ footer i {
     display: flex;
     justify-content: center;
     width: 100%;
+    max-width: 25rem;
+    height: 2.5rem;
     gap: 1.2rem;
 }
 
