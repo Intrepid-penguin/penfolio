@@ -1,6 +1,7 @@
 **/migrations
 **/__pycache__
 db*
+.env
 .vs*
 static
 .vercel

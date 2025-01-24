@@ -26,10 +26,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-1sy1ze3do^=+v-u+(imw2enq7zt8mm2##!&drkk-%vj0un9i&='
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = ['*', 'https://mjournal-production.up.railway.app']
 
@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'm_journal.wsgi.application'
 # }
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://my_rm_db_user:ffxP2REU0H7iz3Ickm6s4WgVbU6eMKaU@dpg-cu9enqjqf0us73bv19ig-a.oregon-postgres.render.com/my_rm_db',
+        default= os.getenv('DATABASE_URL'),
         conn_max_age=600
     )
 }
@@ -166,9 +166,9 @@ MARKDOWNX_IMAGE_MAX_SIZE = {
 }
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dh9zsffcy',
-    'API_KEY': '442972459732815',
-    'API_SECRET': '13CWZag20_99j70upV8r8kU_8ns'
+    'CLOUD_NAME': os.getenv('CD_CLOUD_NAME'),
+    'API_KEY': os.getenv('CD_API_KEY'),
+    'API_SECRET': os.getenv('CD_API_SECRET')
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
