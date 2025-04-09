@@ -32,7 +32,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG')
 
 
- ALLOWED_HOSTS = ['*', 'https://mjournal-production.up.railway.app']
+ALLOWED_HOSTS = ['*', 'https://mjournal-production.up.railway.app']
 
 
 # Application definition
