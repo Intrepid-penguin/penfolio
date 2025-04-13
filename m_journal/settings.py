@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 
 import os
+from urllib.parse import urlparse
 from dotenv import load_dotenv
 import dj_database_url
 # Load environment variables from .env file
@@ -96,11 +97,22 @@ WSGI_APPLICATION = 'm_journal.wsgi.application'
 #         'NAME': BASE_DIR / 'dbm.sqlite3',
 #     }
 # }
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default= os.getenv('DATABASE_URL'),
+#         conn_max_age=600
+#     )
+# }
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 DATABASES = {
-    'default': dj_database_url.config(
-        default= os.getenv('DATABASE_URL'),
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': tmpPostgres.path.replace('/', ''),
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
+        'PORT': 5432,
+    }
 }
 
 
