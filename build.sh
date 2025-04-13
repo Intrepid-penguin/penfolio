@@ -15,3 +15,5 @@ python manage.py migrate
 if [[ "$CREATE_SUPERUSER" == "true" ]]; then
     python manage.py createsuperuser --no-input
 fi
+
+gunicorn m_journal.wsgi
