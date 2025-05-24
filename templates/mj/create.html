@@ -3,81 +3,94 @@
 {% load widget_tweaks %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'markdownx/admin/css/markdownx.css' %}">
-<script src="{% static 'markdownx/js/markdownx.js' %}"></script>
-<link rel="stylesheet" href="{% static 'mj/create.css' %}">
+<link rel="stylesheet" href="{% static 'markdownx/admin/css/markdownx.css' %}"> {# Keep MarkdownX CSS #}
+{# <link rel="stylesheet" href="{% static 'mj/create.css' %}"> #} {# Remove old create.css #}
+{# Note: markdownx.js is usually loaded at the end of body or in {% block script %}, not in css block #}
 {% endblock css %}
 
 {% block body %}
-<section>
-        <div class="head">
-            <h3 class="day"></h3>
-            <div class="time">
-                <span class="hr"></span>
-                <span class="dot">:</span>
-                <span class="min"></span>
+<div class="container mx-auto p-4">
+    <section class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+        <div class="head flex items-baseline space-x-2"> {# Combined .head and time elements #}
+            <h3 class="day text-2xl font-semibold text-gray-800"></h3> {# JS will populate this #}
+            <div class="time text-xl text-gray-600">
+                <span class="hr"></span>:<span class="min"></span> {# JS will populate this, removed dot span #}
             </div>  
         </div>
-        <a href="{% url 'home' %}" style="color: whitesmoke;"><i class="fa-solid fa-flask"></i></a>
+        <a href="{% url 'home' %}" class="text-indigo-600 hover:text-indigo-800 transition-colors duration-150">
+            <i class="fa-solid fa-flask text-2xl"></i> {# Increased icon size #}
+        </a>
     </section>
+
     <main>
       <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         
-        <div class="input" data-preview="false">
-            <button type="button" id="preview-btn">Preview</button>
+        {# Display non-field errors and field errors at the top for visibility #}
+        {% if form.non_field_errors %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold">Error!</strong>
+                <span class="block sm:inline">{{ form.non_field_errors }}</span>
+            </div>
+        {% endif %}
+
+        {% if form.errors %}
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        <strong class="font-bold">Error in {{ field }}:</strong>
+                        <span class="block sm:inline">{{ error }}</span>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+
+        <div class="input bg-white p-6 rounded-lg shadow-xl space-y-6" data-preview="false">
+            <button type="button" id="preview-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded mb-4">Preview</button>
             
-            {% render_field form.content type="text" class="content"%}<br>
+            <div>
+                <label for="{{ form.content.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Content <span class="text-red-500">*</span>:</label>
+                {% render_field form.content class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" rows="10" %} 
+                {# MarkdownX field - basic styling applied; its internal CSS will handle the editor part. `w-full` helps. #}
+            </div>
             
-           <div class="oth">
-               
-            <label>Title <span class="star">*</span> : </label>
-            {% render_field form.title type="text"%}<br>
-           <div class="l">
-            {% comment %} <label class="l">Link-1 : </label>
-            {% render_field form.link1 type="text" class="i1" %}<br>
-           
-            
-            <label class="l">Link-2 : </label>
-            {% render_field form.link2 type="text" class="i1" %}<br> {% endcomment %}
+           <div class="oth mt-4 space-y-4">
+            <div>
+                <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Title <span class="text-red-500">*</span>:</label>
+                {% render_field form.title class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Enter Title" %}
+            </div>
            </div>
-          </div>
           
-          
-            <div class="top">
-                <div class="submit" type="submit">
-                    <button type="submit">
-                    <i class="fa-solid fa-check-to-slot"></i>
+            <div class="top mt-6 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+                <div class="sel-c flex flex-wrap gap-x-4 gap-y-2"> {# Mood tags - using flex wrap for responsiveness #}
+                    <span class="block text-sm font-medium text-gray-700 mb-1 sm:mb-0">Mood <span class="text-red-500">*</span>:</span>
+                    {% for mood in form.mood_tag %}
+                        <div class="flex items-center">
+                            {{ mood.tag }} {# This renders the <input type="radio"> #}
+                            <label for="{{ mood.id_for_label }}" class="ml-2 text-sm text-gray-700">{{ mood.choice_label }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="submit">
+                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-5 rounded-full shadow-lg flex items-center">
+                        <i class="fa-solid fa-check-to-slot mr-2"></i> Create
                     </button>
                 </div>
-                <div class="sel-c">
-                    {% for mood in form.mood_tag %}
-                        {{mood.tag}}
-                        <label for="{{mood.id_for_label}}">{{mood.choice_label}}</label><br>
-                    {% endfor %}
-
-                    {% comment %} <input type="radio" id="blithe" name="class" value="Blithe" checked>                   
-                    <label for="blithe">Merry</label><br>
-
-                    <input type="radio" id="gloomy" name="class" value="Gloomy">
-                    <label for="gloomy">Gloomy</label><br>
-
-                    <input type="radio" id="covert" name="class" value="Covert">
-                    <label for="covert">Covert</label><br> {% endcomment %}
-
-
-                    
-                </div>
             </div>
-           
         </div>
-        
-        
      </form>
-     {{form.error}}
     </main>
+</div>
 {% endblock body %}
 
 {% block script %}
-<script src="{% static 'mj/create.js' %}"></script>
+{# markdownx.js should be loaded here if not already included by {{ form.media }} or similar #}
+{# If {{ form.media }} is not used for markdownx, ensure markdownx.js is loaded.
+   The original template had it in block css, which is unusual.
+   It's better here or via form.media if markdownx supports it.
+   For now, assuming it's handled or can be added if needed.
+#}
+<script src="{% static 'markdownx/js/markdownx.js' %}"></script> {# Moved from css block #}
+<script src="{% static 'mj/create.js' %}"></script> {# Preserve original script #}
 {% endblock script %}

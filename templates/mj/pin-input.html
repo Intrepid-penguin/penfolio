@@ -1,12 +1,26 @@
-<div class="cform" open="false" display="{{ display }}">
-    <form method="POST" action="{% url 'c-journals' %}" autocomplete="off">
-        {% csrf_token %}
-        <nav><button class="close" type="button">close</button></nav>
-        <h2>Enter pin to view your secret journal </h2>
-        <div class="input-s">
-            {{ form.pin }}
-            <!-- <input type="text" name="pin" value="{{request.GET.pin}}" /> -->
-            <button type="submit">enter</button>
-        </div>
-    </form>
+{% load widget_tweaks %}
+
+{# The outer div will be controlled by JS. Adding 'hidden' class initially if it's a modal.
+   The 'display="{{ display }}"' attribute from the original is preserved.
+   If 'display' is 'True' or similar, JS would remove 'hidden'.
+   For styling purposes, I'll omit 'hidden' in the code I write, assuming it's added by default by JS or backend.
+#}
+<div class="cform fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center p-4 z-40" data-opened="{{ open|default:'false' }}" display="{{ display }}">
+    <div class="bg-white p-6 rounded-lg shadow-xl mx-auto max-w-sm w-full"> {# max-w-sm for a PIN input modal #}
+        <form method="POST" action="{% url 'c-journals' %}" autocomplete="off">
+            {% csrf_token %}
+            <div class="flex justify-end mb-3"> {# Replaced <nav> with this div for the close button #}
+                <button class="close text-gray-600 hover:text-gray-800 text-2xl" type="button">&times;</button> {# Using &times; for a common close icon #}
+            </div>
+            <h2 class="text-xl font-semibold mb-4 text-gray-700 text-center">Enter PIN to View Secret Journal</h2> {# Centered title #}
+            
+            <div class="space-y-4"> {# Changed from flex to space-y for stacking input and button nicely in a modal #}
+                {% render_field form.pin class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Enter PIN" %}
+                
+                <button type="submit" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Enter
+                </button>
+            </div>
+        </form>
+    </div>
 </div>

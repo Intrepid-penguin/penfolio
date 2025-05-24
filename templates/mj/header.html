@@ -1,14 +1,17 @@
-<header>
-    <nav>
-        <div class="pen-icon">
-            <a href="{% url 'create-j' %}"><i class="fa-solid fa-pen"></i></a>
+{% load static %}
+<nav class="bg-gray-800 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <!-- Logo -->
+        <a href="{% url 'home' %}" class="text-xl font-bold">Pen<span><i class="fa-solid fa-code px-1"></i></span>Folio</a>
+
+        <!-- Icons -->
+        <div class="flex items-center space-x-4">
+            <a href="{% url 'create-j' %}" class="text-white hover:text-gray-300">
+                <i class="fa-solid fa-pen"></i>
+            </a>
+            <button class="text-white hover:text-gray-300"> <!-- Removed md:hidden for now -->
+                <i class="fa-solid fa-bars"></i>
+            </button>
         </div>
-        <div class="txt">
-            <a href="{% url 'home' %}">Pen<span><i class="fa-solid fa-code"></i></span>Folio</a> 
-        </div>
-        <div class="burger-icon">
-           <i class="fa-solid fa-bars"></i>
-            
-        </div>
-    </nav>
-</header>
+    </div>
+</nav>

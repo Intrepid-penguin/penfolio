@@ -3,107 +3,94 @@
 {% load static %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'mj/home.css' %}">
-<link rel="stylesheet" href="{% static 'mj/header.css' %}">
+{# Remove old CSS links, Tailwind is now in meta.html #}
+{# <link rel="stylesheet" href="{% static 'mj/home.css' %}"> #}
+{# <link rel="stylesheet" href="{% static 'mj/header.css' %}"> #}
 {% endblock css %}
 
 {% block body %}
-{% include 'mj/header.html' %}
-<section>
-    
-    {% if messages %}
-        <div class="error-msg">
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        </div>
-    {% endif %}
-        
-    
-    <form action="{% url 'search' %}" method="GET" value="{{request.GET.q}}" class="form">
-        <div class="search">            
-            <input type="text" name="q" id="" value="{{request.GET.q}}">            
-            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>            
-        </div>
-    </form>
-    
-    {% block pinform %}
-        {% include 'mj/pin-input.html' %}
-    {% endblock pinform %}
-        
-    
-    <div class="books">
-        <a class="book" href="{% url 'm-journals' %}"><p>Merryy</p></a>
-        <a class="book" href="{% url 'g-journals' %}"><p>Gloomy</p></a>
-        <a class="book covert"><p>Covert</p></a>   
-    </div>
+{% include 'mj/header.html' %} {# Header is already restyled #}
 
+<div class="container mx-auto p-4"> {# Overall Page Structure #}
+    <section>
     
-    <div class="journals">
-        {% block content %}
-        
-            {% for journal in journals %}
-                {% block j-content %}
-                    {% if journal.mood_tag == 'ME' %}
-                    
-                        <div class="j1 s">
-                            <a href="{% url 'view-j' journal.id %}"> 
-                                <div class="txt">
-                                    <h4>{{journal.title}}</h4>
-                                    <div class="txt-b">
-                                        <h2>{{journal.date_added}}</h2>
-                                        <i class="fa-solid fa-angle-right"></i>
-                                    </div>
-                                </div> 
-                            </a>
-                        </div>
-                
-                    {% endif %}
-                    {% if journal.mood_tag == 'GL' %}
-                        <div class="j1 c">
-                            <a href="{% url 'view-j' journal.id %}"> 
-                                <div class="txt">
-                                    <h4>{{journal.title}}</h4>
-                                    <div class="txt-b">
-                                        <h2>{{journal.date_added}}</h2>
-                                        <i class="fa-solid fa-angle-right"></i>
-                                    </div>
-                                </div> 
-                            </a>
-                        </div>
-                    {% endif %}
-                {% endblock j-content %}
-
-            {% empty %}
-                <h2> Sorry, no journal entry found 
-                {% if 'g' in request.path  %}
-                    in the Gloomy journal log.
-                {% elif 'm' in request.path%}
-                    in the Merry journal log.
-                {% elif 'c' in request.path%}
-                    in the Covert journal log.
-                {% else %}
-                    retry or make a new entry.
-                {% endif %}</h2>
-                    
-            {% endfor %}
-
-        {% endblock content %}    
-       
-        
-    </div>
-    
-    <footer>
-        <a href="{% url 'create-j' %}">
-            <div class="foot-pen">
-                <i class="fa-solid fa-pen"></i>
+        {% if messages %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded my-4" role="alert"> {# Error Messages #}
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
             </div>
-        </a>
-    </footer>
+        {% endif %}
+            
+        <form action="{% url 'search' %}" method="GET" class="my-4"> {# Search Form - added my-4 for spacing #}
+            <div class="flex items-center">
+                <input type="text" name="q" value="{{request.GET.q}}" placeholder="Search journals..." class="appearance-none border rounded-l py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow">            
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>            
+            </div>
+        </form>
+        
+        <div class="my-4"> {# PIN Input Form - wrapper with margin #}
+            {% block pinform %}
+                {% include 'mj/pin-input.html' %}
+            {% endblock pinform %}
+        </div>
+            
+        <div class="flex justify-around my-6 space-x-2"> {# "Books" Section - added my-6 for more spacing #}
+            <a href="{% url 'm-journals' %}" class="bg-green-200 hover:bg-green-300 text-green-800 font-semibold py-3 px-6 rounded-lg shadow transition duration-150 ease-in-out transform hover:scale-105 text-center">Merryy</a>
+            <a href="{% url 'g-journals' %}" class="bg-yellow-200 hover:bg-yellow-300 text-yellow-800 font-semibold py-3 px-6 rounded-lg shadow transition duration-150 ease-in-out transform hover:scale-105 text-center">Gloomy</a>
+            <a class="covert bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg shadow transition duration-150 ease-in-out transform hover:scale-105 text-center">Covert</a>   
+        </div>
+
+        <div class="mt-8"> {# "Journals" Section #}
+            {% block content %}
+                {% for journal in journals %}
+                    {% block j-content %}
+                        {# Card styling applied directly, specific mood styling (j1 s, j1 c) removed #}
+                        <a href="{% url 'view-j' journal.id %}" class="block mb-4">
+                            <div class="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-200">
+                                <div class="flex justify-between items-start"> {# Changed items-center to items-start for better title alignment if it wraps #}
+                                    <h4 class="text-lg font-semibold text-gray-800 mb-1">{{journal.title}}</h4>
+                                    {# Optional: Add mood-specific icon/color here if needed, using journal.mood_tag #}
+                                </div>
+                                <div class="flex justify-between items-center text-sm text-gray-600 mt-2"> {# Added mt-2 for spacing #}
+                                    <span>{{journal.date_added}}</span> {# Changed h2 to span for semantics #}
+                                    <i class="fa-solid fa-angle-right text-gray-500"></i>
+                                </div>
+                            </div> 
+                        </a>
+                    {% endblock j-content %}
+                {% empty %}
+                    <h2 class="text-gray-500 text-center py-10 text-lg"> {# Styled empty message #}
+                        Sorry, no journal entry found 
+                        {% if 'g' in request.path  %}
+                            in the Gloomy journal log.
+                        {% elif 'm' in request.path%}
+                            in the Merry journal log.
+                        {% elif 'c' in request.path%}
+                            in the Covert journal log.
+                        {% else %}
+                            retry or make a new entry.
+                        {% endif %}
+                    </h2>
+                {% endfor %}
+            {% endblock content %}    
+        </div>
+        
+    </section> {# End of main content section within container #}
+</div> {# End of container mx-auto p-4 #}
+
+<footer class="fixed bottom-6 right-6"> {# Footer FAB #}
+    <a href="{% url 'create-j' %}">
+        <div class="bg-blue-500 hover:bg-blue-600 text-white font-bold w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition duration-150 ease-in-out transform hover:scale-110"> {# Increased size slightly w-14 h-14 #}
+            <i class="fa-solid fa-pen text-lg"></i> {# Increased icon size slightly #}
+        </div>
+    </a>
+</footer>
     
-</section>
 {% endblock body %}
+
 {% block script %}
-<script src="{% static 'mj/home.js' %}"></script>
+<script src="{% static 'mj/home.js' %}"></script> {# Preserve original script #}
 {% endblock script %}
-    
