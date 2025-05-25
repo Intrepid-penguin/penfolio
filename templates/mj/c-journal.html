@@ -4,23 +4,23 @@
 {% block pinform %}{% endblock pinform %} {# This hides the PIN form section from home.html, relevant for Covert Journals view #}
 
 {% block content %}
-   <h1 class="text-2xl font-bold mb-6 text-center text-gray-700">Covert Journals</h1>
+   <h1 class="text-2xl font-bold mb-6 text-center text-gray-700 dark:text-slate-100">Covert Journals</h1>
    
    {% for journal in journals %}
-       <div class="bg-white shadow-md rounded-lg p-4 mb-4 hover:shadow-lg transition-shadow duration-200">
+       <div class="bg-white dark:bg-slate-800 dark:border dark:border-slate-700 shadow-md rounded-lg p-4 mb-4 hover:shadow-lg transition-shadow duration-200">
            <a href="{% url 'view-j' journal.id %}" class="block">
                <div class="flex justify-between items-start mb-1">
-                   <h4 class="text-lg font-semibold text-gray-800">{{ journal.title }}</h4>
+                   <h4 class="text-lg font-semibold text-gray-800 dark:text-slate-100">{{ journal.title }}</h4>
                    {# Optional: Add a mood-specific icon like <i class="fas fa-user-secret text-purple-500 ml-2"></i> if desired #}
                </div>
-               <div class="flex justify-between items-center text-sm text-gray-600 mt-2">
+               <div class="flex justify-between items-center text-sm text-gray-600 dark:text-slate-400 mt-2">
                    <span>{{ journal.date_added }}</span>
-                   <i class="fa-solid fa-angle-right text-gray-500"></i>
+                   <i class="fa-solid fa-angle-right text-gray-500 dark:text-slate-500"></i>
                </div>
            </a>
        </div>
    {% empty %}
-       <h2 class="text-gray-500 text-center py-10 text-lg">
+       <h2 class="text-gray-500 dark:text-gray-400 text-center py-10 text-lg">
            Sorry, no journal entry found in the Covert journal log.
        </h2>
    {% endfor %}

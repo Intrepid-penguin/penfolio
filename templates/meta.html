@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +9,9 @@
     <link rel="icon" href="https://res.cloudinary.com/dh9zsffcy/image/upload/v1737688358/fav_rv9tu7.jpg" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.10/dist/cdn.min.js"></script>
 </head>
-<body onload="time()">
+<body class="font-sans antialiased dark:bg-gray-900 dark:text-gray-200" onload="time()">
     {% block body %}
     
     {% endblock body %}

@@ -1,15 +1,15 @@
 {% load static %}
-<nav class="bg-gray-800 text-white p-4">
+<nav class="bg-gray-800 dark:bg-slate-800 text-white dark:text-slate-100 p-4">
     <div class="container mx-auto flex justify-between items-center">
         <!-- Logo -->
-        <a href="{% url 'home' %}" class="text-xl font-bold">Pen<span><i class="fa-solid fa-code px-1"></i></span>Folio</a>
+        <a href="{% url 'home' %}" class="text-xl font-bold transition-opacity duration-200 ease-in-out hover:opacity-80">Pen<span><i class="fa-solid fa-code px-1"></i></span>Folio</a>
 
         <!-- Icons -->
         <div class="flex items-center space-x-4">
-            <a href="{% url 'create-j' %}" class="text-white hover:text-gray-300">
+            <a href="{% url 'create-j' %}" class="text-white dark:text-slate-100 hover:text-gray-300 dark:hover:text-slate-300 transition-all duration-200 ease-in-out hover:opacity-80 hover:scale-110">
                 <i class="fa-solid fa-pen"></i>
             </a>
-            <button class="text-white hover:text-gray-300"> <!-- Removed md:hidden for now -->
+            <button class="text-white dark:text-slate-100 hover:text-gray-300 dark:hover:text-slate-300 transition-all duration-200 ease-in-out hover:opacity-80 hover:scale-110 active:scale-95"> <!-- Removed md:hidden for now -->
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>

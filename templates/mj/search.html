@@ -3,13 +3,13 @@
 {% load search %} {# For the highlight filter #}
 
 {% block content %}
-   <h1 class="text-2xl font-bold mb-6 text-center text-gray-700">Search Results for: "<span class="text-indigo-600">{{ request.GET.q }}</span>"</h1>
+   <h1 class="text-2xl font-bold mb-6 text-center text-gray-700 dark:text-slate-100">Search Results for: "<span class="text-indigo-600 dark:text-indigo-400">{{ request.GET.q }}</span>"</h1>
    
    {% for result in results %} {# Assuming 'results' is the context variable for search results #}
-       <div class="bg-white shadow-md rounded-lg p-4 mb-4 hover:shadow-lg transition-shadow duration-200">
+       <div class="bg-white dark:bg-slate-800 dark:border dark:border-slate-700 shadow-md rounded-lg p-4 mb-4 hover:shadow-lg transition-shadow duration-200">
            <a href="{% url 'view-j' result.id %}" class="block">
                <div class="flex justify-between items-start mb-1"> {# items-start for title wrapping #}
-                   <h4 class="text-lg font-semibold text-gray-800">
+                   <h4 class="text-lg font-semibold text-gray-800 dark:text-slate-100">
                        {{ result.title|highlight:request.GET.q|safe }} {# Apply highlight filter, ensure |safe if highlight returns HTML #}
                    </h4>
                    {# Optionally, add mood-specific styling based on result.mood_tag if needed #}
@@ -23,14 +23,14 @@
                        {% endif %}
                    #}
                </div>
-               <div class="flex justify-between items-center text-sm text-gray-600 mt-2">
+               <div class="flex justify-between items-center text-sm text-gray-600 dark:text-slate-400 mt-2">
                    <span>{{ result.date_added }}</span>
-                   <i class="fa-solid fa-angle-right text-gray-500"></i>
+                   <i class="fa-solid fa-angle-right text-gray-500 dark:text-slate-500"></i>
                </div>
            </a>
        </div>
    {% empty %}
-       <h2 class="text-gray-500 text-center py-10 text-lg">
+       <h2 class="text-gray-500 dark:text-gray-400 text-center py-10 text-lg">
            Sorry, no journal entry found for your search query: "<span class="font-medium">{{ request.GET.q }}</span>".
        </h2>
    {% endfor %}
