@@ -1,7 +1,9 @@
-from typing import Any, Dict
+from datetime import datetime, timedelta, timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.views.generic import DetailView, CreateView, UpdateView, ListView, DeleteView
+
+from users.models import UserProfile
 from .forms import journalform, Pinform
 from .models import Journal
 from django.contrib import messages
@@ -10,7 +12,6 @@ from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 import cloudinary.uploader
-from markdownx.utils import markdownify
 from django.http import JsonResponse
 
 
@@ -43,15 +44,48 @@ class JournalBaseListView(LoginRequiredMixin, ListView):
 class home(JournalBaseListView):
     fields = ['title', 'date_added', 'mood_tag']
     template_name = 'mj/home.html'
-
-class createjournalview(LoginRequiredMixin, CreateView):
+class CreateJournalView(LoginRequiredMixin, CreateView):
     template_name = 'mj/create.html'
     form_class = journalform
     success_url = '/'
     
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+    
+        journal = self.object
+        self.update_streak(journal)
+        
+        return response
+
+    def update_streak(self, journal):
+        """Update user's streak based on the journal creation date"""
+        user = self.request.user
+        user_profile, created = UserProfile.objects.get_or_create(user=user)
+        
+        journal_date = journal.date_added.date()
+        
+        if user_profile.last_content_date == journal_date:
+            return  # Already counted for today
+        
+        if user_profile.last_content_date:
+            # Check if consecutive day
+            if user_profile.last_content_date == journal_date - timedelta(days=1):
+                user_profile.current_streak += 1
+            else:
+                # Reset streak if not consecutive
+                user_profile.current_streak = 1
+        else:
+            # First journal entry
+            user_profile.current_streak = 1
+        
+        # Update longest streak if needed
+        if user_profile.current_streak > user_profile.longest_streak:
+            user_profile.longest_streak = user_profile.current_streak
+        
+        # Update last content date
+        user_profile.last_content_date = journal_date
+        user_profile.save()
     
 class viewJournal(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Journal
@@ -65,9 +99,10 @@ class viewJournal(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context.update(
             title = self.object.title,
-            content = self.object.formatted_markdown,
+            content = self.object.content,
             date = self.object.date_added,
          )
+        print(context)
         return context
      
 class updateJournal(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -132,7 +167,7 @@ class listCJournal(LoginRequiredMixin, UserPassesTestMixin, ListView):
     def test_func(self):
         user = get_object_or_404(User, username=self.request.user)
         pin = self.request.POST.get('pin')
-        return check_password(pin, user.covertuser.pin)
+        return check_password(pin, user.user_profile.pin)
     
     def handle_no_permission(self):
         messages.error(self.request, 'oops! you have entered an incorrect pin or you are unauthourized to view the Covert page')
@@ -183,3 +218,48 @@ def custom_markdownx_upload(request):
         # Return the URL in a format that Markdownx expects
         return JsonResponse({'image_code': f'![alt text]({image_url})'})
     return JsonResponse({'error': 'Upload failed'}, status=400)
+
+def update_streak_on_creation(user):
+    """Updates the current and longest streak for a user when content is created."""
+    try:
+        user_profile = user.user_profile
+    except UserProfile.DoesNotExist:
+        return  # Should not happen due to signals, but for safety
+
+    today = timezone.now().date()
+
+    if user_profile.last_content_date == today:
+        # User already created content today, no streak change
+        return
+
+    if user_profile.last_content_date == today - timedelta(days=1):
+        # Streak continues
+        user_profile.current_streak += 1
+    else:
+        # Streak broken or this is the first content
+        user_profile.current_streak = 1
+
+    user_profile.longest_streak = max(user_profile.longest_streak, user_profile.current_streak)
+    user_profile.last_content_date = today
+    user_profile.save()
+    
+def update_streak_based_on_journal(user, journal):
+    """Update streak based on the journal's actual creation date"""
+    try:
+        user_profile = user.user_profile
+    except UserProfile.DoesNotExist:
+        return
+
+    journal_date = journal.date_added.date()
+    
+    if user_profile.last_content_date == journal_date:
+        return
+
+    if user_profile.last_content_date == journal_date - timedelta(days=1):
+        user_profile.current_streak += 1
+    else:
+        user_profile.current_streak = 1
+
+    user_profile.longest_streak = max(user_profile.longest_streak, user_profile.current_streak)
+    user_profile.last_content_date = journal_date
+    user_profile.save()

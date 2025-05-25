@@ -31,11 +31,11 @@
             </div>
         </form>
         
-        <div class="my-4"> {# PIN Input Form - wrapper with margin #}
+        {% comment %} <div class="my-4"> {# PIN Input Form - wrapper with margin #}
             {% block pinform %}
                 {% include 'mj/pin-input.html' %}
             {% endblock pinform %}
-        </div>
+        </div> {% endcomment %}
             
         <div class="flex justify-around my-6 space-x-2"> {# "Books" Section - added my-6 for more spacing #}
             <a href="{% url 'm-journals' %}" class="bg-green-200 hover:bg-green-300 text-green-800 font-semibold py-3 px-6 rounded-lg shadow transition duration-150 ease-in-out transform hover:scale-105 text-center">Merryy</a>
