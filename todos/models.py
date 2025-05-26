@@ -20,7 +20,7 @@ class Todos(models.Model):
     date_added = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=2, choices=Status.choices, default=Status.pending)
     tag = models.CharField(max_length=2, choices=Tags.choices, default=Tags.low)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    # owner = models.ForeignKey(User, on_delete=models.CASCADE)
     
     
     def __str__(self):
