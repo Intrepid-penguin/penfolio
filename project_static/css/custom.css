@@ -1,1 +1,56 @@
 /* Custom styles will go here */
+
+/* Ensure custom styles are applied after Tailwind's base/utility, and specific to dark mode */
+
+.dark .markdownx-editor,
+.dark .markdownx-editor textarea { /* Assuming the editor is or contains a textarea */
+    background-color: #1f2937; /* Example: bg-slate-800 or a slightly darker shade like gray-800 */
+    color: #cbd5e1; /* Example: text-slate-300 */
+    border-color: #334155 !important; /* Example: border-slate-700, !important might be needed for specificity */
+    caret-color: #e2e8f0; /* Example: text-slate-200 for the cursor */
+}
+
+.dark .markdownx-preview {
+    background-color: #1f2937; /* Match editor background or be slightly different if desired */
+    color: #cbd5e1; /* Match editor text color */
+    border-color: #334155 !important; /* Example: border-slate-700 */
+}
+
+/* Styling the toolbar */
+.dark .markdownx-toolbar {
+    background-color: #334155 !important; /* Example: bg-slate-700 */
+    border-bottom-color: #475569 !important; /* Example: border-slate-600 */
+}
+
+/* Styling toolbar buttons/icons */
+.dark .markdownx-toolbar li a,
+.dark .markdownx-toolbar button { /* Depending on actual elements used for buttons */
+    color: #94a3b8 !important; /* Example: text-slate-400 */
+}
+.dark .markdownx-toolbar li a:hover,
+.dark .markdownx-toolbar button:hover {
+    background-color: #475569 !important; /* Example: bg-slate-600 */
+    color: #e2e8f0 !important; /* Example: text-slate-200 */
+}
+
+/* Style active/selected toolbar buttons if MarkdownX uses a specific class */
+.dark .markdownx-toolbar li.active a, /* Example if active state is on <li> */
+.dark .markdownx-toolbar button.active { /* Example if active state is on <button> */
+    background-color: #1e40af !important; /* Example: bg-blue-700 or similar accent */
+    color: #ffffff !important;
+}
+
+/* Scrollbar styling for webkit browsers (optional, but nice for consistency) */
+.dark .markdownx-editor textarea::-webkit-scrollbar {
+    width: 8px;
+}
+.dark .markdownx-editor textarea::-webkit-scrollbar-track {
+    background: #1f2937; /* Editor background */
+}
+.dark .markdownx-editor textarea::-webkit-scrollbar-thumb {
+    background: #475569; /* A slightly lighter shade */
+    border-radius: 4px;
+}
+.dark .markdownx-editor textarea::-webkit-scrollbar-thumb:hover {
+    background: #525f73; 
+}
