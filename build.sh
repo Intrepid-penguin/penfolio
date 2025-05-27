@@ -12,8 +12,6 @@ python manage.py collectstatic --no-input
 python manage.py migrate
 
 # Add super_user
-if [[ "$CREATE_SUPERUSER" == "True" ]]; then
+if [[ "$CREATE_SUPERUSER" == "true" ]]; then
     python manage.py createsuperuser --no-input
 fi
-
-gunicorn m_journal.wsgi

@@ -22,40 +22,54 @@
             </div>
         {% endif %}
             
-        <form action="{% url 'search' %}" method="GET" class="my-4"> {# Search Form - added my-4 for spacing #}
-            <div class="flex items-center">
-                <input type="text" name="q" value="{{request.GET.q}}" placeholder="Search journals..." class="appearance-none border dark:border-gray-600 rounded-l py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-700 dark:placeholder-gray-400 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:dark:ring-blue-500 focus:border-blue-500 focus:dark:border-blue-500 flex-grow">            
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r transition-all duration-200 ease-in-out hover:opacity-80 hover:scale-105 active:scale-95">
-                    <i class="fa-solid fa-magnifying-glass"></i>
+        <form action="{% url 'search' %}" method="GET" class="my-6"> {# Search Form - updated margin #}
+            <div class="flex items-center rounded-md shadow-sm dark:shadow-none dark:border dark:border-slate-700 overflow-hidden">
+                <input type="text" name="q" value="{{request.GET.q}}" placeholder="Search journals..." class="appearance-none bg-transparent dark:bg-slate-800 h-12 px-4 text-gray-700 dark:text-slate-100 dark:placeholder-slate-400 leading-tight focus:outline-none focus:ring-0 flex-grow">            
+                <button type="submit" class="bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 h-12 px-4 transition-all duration-200 ease-in-out hover:opacity-80 hover:scale-105 active:scale-95">
+                    <i class="fa-solid fa-magnifying-glass text-slate-500 dark:text-slate-300"></i>
                 </button>            
             </div>
         </form>
         
-        {% comment %} <div class="my-4"> {# PIN Input Form - wrapper with margin #}
+        <div class="my-4"> {# PIN Input Form - wrapper with margin #}
             {% block pinform %}
                 {% include 'mj/pin-input.html' %}
             {% endblock pinform %}
-        </div> {% endcomment %}
+        </div>
             
-        <div class="flex justify-around my-6 space-x-2"> {# "Books" Section - added my-6 for more spacing #}
-            <a href="{% url 'm-journals' %}" class="bg-green-200 hover:bg-green-300 text-green-800 dark:bg-green-700 dark:hover:bg-green-600 dark:text-green-200 font-semibold py-3 px-6 rounded-lg shadow transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg text-center">Merryy</a>
-            <a href="{% url 'g-journals' %}" class="bg-yellow-200 hover:bg-yellow-300 text-yellow-800 dark:bg-yellow-700 dark:hover:bg-yellow-600 dark:text-yellow-200 font-semibold py-3 px-6 rounded-lg shadow transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg text-center">Gloomy</a>
-            <a href="#" @click.prevent="showPinModal = true" class="covert bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-slate-200 font-semibold py-3 px-6 rounded-lg shadow transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg text-center">Covert</a>   
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-6"> {# "Books" Section - Redesigned to grid #}
+            <a href="{% url 'm-journals' %}" class="block p-6 rounded-md shadow-sm bg-white dark:bg-slate-800 hover:dark:bg-slate-700/70 dark:border dark:border-slate-700/80 hover:dark:border-slate-600 transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-sun fa-lg text-yellow-400 dark:text-yellow-300"></i>
+                    <p class="text-lg font-semibold text-gray-800 dark:text-slate-100">Merryy</p>
+                </div>
+            </a>
+            <a href="{% url 'g-journals' %}" class="block p-6 rounded-md shadow-sm bg-white dark:bg-slate-800 hover:dark:bg-slate-700/70 dark:border dark:border-slate-700/80 hover:dark:border-slate-600 transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-cloud fa-lg text-gray-400 dark:text-gray-300"></i>
+                    <p class="text-lg font-semibold text-gray-800 dark:text-slate-100">Gloomy</p>
+                </div>
+            </a>
+            <a href="#" @click.prevent="showPinModal = true" class="covert block p-6 rounded-md shadow-sm bg-white dark:bg-slate-800 hover:dark:bg-slate-700/70 dark:border dark:border-slate-700/80 hover:dark:border-slate-600 transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-user-secret fa-lg text-indigo-400 dark:text-indigo-300"></i>
+                    <p class="text-lg font-semibold text-gray-800 dark:text-slate-100">Covert</p>
+                </div>
+            </a>   
         </div>
 
         <div class="mt-8"> {# "Journals" Section #}
             {% block content %}
                 {% for journal in journals %}
                     {% block j-content %}
-                        {# Card styling applied directly, specific mood styling (j1 s, j1 c) removed #}
-                        <a href="{% url 'view-j' journal.id %}" class="block mb-4 transition-all duration-200 ease-in-out hover:scale-[1.02]">
-                            <div class="bg-white dark:bg-slate-800 dark:border dark:border-slate-700 shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-200"> {# Existing transition-shadow is fine, hover:shadow-lg is already there #}
-                                <div class="flex justify-between items-start"> {# Changed items-center to items-start for better title alignment if it wraps #}
-                                    <h4 class="text-lg font-semibold text-gray-800 dark:text-slate-100 mb-1">{{journal.title}}</h4>
+                        <a href="{% url 'view-j' journal.id %}" class="block mb-4 p-4 rounded-md shadow-sm bg-white dark:bg-slate-800 hover:dark:bg-slate-700/70 dark:border dark:border-slate-700/80 hover:dark:border-slate-600 transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-px">
+                            <div> {# Removed bg, border, shadow from this inner div #}
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-lg font-semibold text-gray-800 dark:text-slate-100 mb-1 tracking-tight">{{journal.title}}</h4>
                                     {# Optional: Add mood-specific icon/color here if needed, using journal.mood_tag #}
                                 </div>
-                                <div class="flex justify-between items-center text-sm text-gray-600 dark:text-slate-400 mt-2"> {# Added mt-2 for spacing #}
-                                    <span>{{journal.date_added}}</span> {# Changed h2 to span for semantics #}
+                                <div class="flex justify-between items-center text-sm text-gray-600 dark:text-slate-400 mt-2">
+                                    <span>{{journal.date_added}}</span>
                                     <i class="fa-solid fa-angle-right text-gray-500 dark:text-slate-500"></i>
                                 </div>
                             </div> 
@@ -82,9 +96,9 @@
 </div> {# End of container mx-auto p-4 #}
 
 <footer class="fixed bottom-6 right-6"> {# Footer FAB #}
-    <a href="{% url 'create-j' %}">
-        <div class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 ease-in-out transform hover:scale-110 hover:shadow-xl active:scale-100"> {# Increased size slightly w-14 h-14 #}
-            <i class="fa-solid fa-pen text-lg"></i> {# Increased icon size slightly #}
+    <a href="{% url 'create-j' %}" class="group">
+        <div class="bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 text-white font-bold w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl dark:shadow-indigo-500/30 transition-all duration-200 ease-in-out transform group-hover:-translate-y-1 group-hover:scale-105 group-active:scale-95">
+            <i class="fa-solid fa-pen text-xl"></i> {# Ensured text-xl for icon size #}
         </div>
     </a>
 </footer>

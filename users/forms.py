@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import UserProfile
+from .models import Covertuser
 
 
 
@@ -22,5 +22,5 @@ class CovertuserForm(forms.ModelForm):
             widget=forms.PasswordInput(attrs={"autocomplete": "new-pin"}),
         )
     class Meta:
-        model = UserProfile
+        model = Covertuser
         fields = ['pin']       

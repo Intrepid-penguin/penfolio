@@ -2,21 +2,21 @@
 {% load static %}
 
 {% block content %}
-   <h1 class="text-2xl font-bold mb-6 text-center text-green-600 dark:text-slate-100">Merry Journals</h1> {# Changed color for Merry theme, added dark text #}
+   <h1 class="text-3xl font-bold dark:text-slate-100 tracking-tight mb-6 text-center text-green-600">Merry Journals</h1> {# Updated title style #}
    
    {% for journal in journals %}
-       <div class="bg-white dark:bg-slate-800 dark:border dark:border-slate-700 shadow-md rounded-lg p-4 mb-4 hover:shadow-lg transition-shadow duration-200">
-           <a href="{% url 'view-j' journal.id %}" class="block">
-               <div class="flex justify-between items-start mb-1">
-                   <h4 class="text-lg font-semibold text-gray-800 dark:text-slate-100">{{ journal.title }}</h4>
+       <a href="{% url 'view-j' journal.id %}" class="block mb-4 p-4 rounded-md shadow-sm bg-white dark:bg-slate-800 hover:dark:bg-slate-700/70 dark:border dark:border-slate-700/80 hover:dark:border-slate-600 transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-px">
+           <div> {# Inner structural div #}
+               <div class="flex justify-between items-start">
+                   <h4 class="text-lg font-semibold text-gray-800 dark:text-slate-100 mb-1 tracking-tight">{{ journal.title }}</h4>
                    {# Optional: Add a mood-specific icon like <i class="fas fa-smile text-green-500 ml-2"></i> if desired #}
                </div>
                <div class="flex justify-between items-center text-sm text-gray-600 dark:text-slate-400 mt-2">
                    <span>{{ journal.date_added }}</span>
                    <i class="fa-solid fa-angle-right text-gray-500 dark:text-slate-500"></i>
                </div>
-           </a>
-       </div>
+           </div> 
+       </a>
    {% empty %}
        <h2 class="text-gray-500 dark:text-gray-400 text-center py-10 text-lg">
            Sorry, no journal entry found in the Merry journal log.

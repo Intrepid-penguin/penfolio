@@ -31,20 +31,21 @@
                 <button type="button" 
                         @click="activeTab = 'edit'" 
                         :class="{
-                            'bg-indigo-500 text-white font-semibold py-2 px-4 rounded-t -mb-px border-x border-t border-indigo-500 dark:border-indigo-500': activeTab === 'edit', 
-                            'text-gray-600 dark:text-slate-300 font-medium py-2 px-4 rounded-t hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-indigo-500 dark:hover:text-indigo-400 border-b-2 border-transparent hover:border-gray-300 dark:hover:border-slate-600': activeTab !== 'edit'
+                            'border-b-2 border-indigo-500 dark:border-indigo-400 text-indigo-600 dark:text-indigo-300 bg-white dark:bg-slate-800': activeTab === 'edit', 
+                            'text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 hover:border-b-2 hover:border-indigo-300 dark:hover:border-indigo-500/50 border-b-2 border-transparent': activeTab !== 'edit'
                         }"
-                        class="transition-all duration-150 ease-in-out">Edit</button>
+                        class="py-2 px-4 font-medium text-sm rounded-t-md transition-colors duration-150 ease-in-out">Edit</button>
                 <button type="button" 
                         @click="activeTab = 'preview'"
                         :class="{
-                            'bg-indigo-500 text-white font-semibold py-2 px-4 rounded-t -mb-px border-x border-t border-indigo-500 dark:border-indigo-500': activeTab === 'preview', 
-                            'text-gray-600 dark:text-slate-300 font-medium py-2 px-4 rounded-t hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-indigo-500 dark:hover:text-indigo-400 border-b-2 border-transparent hover:border-gray-300 dark:hover:border-slate-600': activeTab !== 'preview'
+                            'border-b-2 border-indigo-500 dark:border-indigo-400 text-indigo-600 dark:text-indigo-300 bg-white dark:bg-slate-800': activeTab === 'preview', 
+                            'text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 hover:border-b-2 hover:border-indigo-300 dark:hover:border-indigo-500/50 border-b-2 border-transparent': activeTab !== 'preview'
                         }"
-                        class="transition-all duration-150 ease-in-out">Preview</button>
+                        class="py-2 px-4 font-medium text-sm rounded-t-md transition-colors duration-150 ease-in-out">Preview</button>
             </div>
             
-            <div x-show="activeTab === 'edit'" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+            <div x-show="activeTab === 'edit'" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                 class="rounded-md focus-within:ring-1 focus-within:ring-indigo-500 dark:focus-within:ring-indigo-400 focus-within:border-indigo-500 dark:focus-within:border-indigo-400">
                 <label for="{{ form.content.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Content <span class="text-red-500">*</span>:</label>
                 {% render_field form.content class="w-full border-gray-300 dark:border-slate-600 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" rows="10" %} 
             </div>
@@ -61,7 +62,7 @@
            <div class="oth mt-4 space-y-4">
             <div>
                 <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Title <span class="text-red-500">*</span>:</label>
-                {% render_field form.title class="appearance-none border dark:border-slate-600 rounded w-full py-2 px-3 text-gray-700 dark:text-slate-200 dark:bg-slate-700 dark:placeholder-slate-400 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Enter Title" %}
+                {% render_field form.title class="block w-full px-3 py-2.5 bg-white dark:bg-slate-800/60 border border-slate-300 dark:border-slate-700 rounded-md shadow-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-1 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition-colors duration-150 ease-in-out" placeholder="Enter Title" %}
             </div>
            </div>
           
@@ -77,7 +78,7 @@
                 </div>
 
                 <div class="submit">
-                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-5 rounded-full shadow-lg flex items-center transition-all duration-200 ease-in-out hover:scale-110 hover:shadow-lg active:scale-100">
+                    <button type="submit" class="inline-flex items-center justify-center px-4 py-2.5 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-800 focus:ring-indigo-500 transition-all duration-150 ease-in-out transform hover:scale-[1.02] active:scale-[0.98]">
                         <i class="fa-solid fa-check-to-slot mr-2"></i> Create
                     </button>
                 </div>

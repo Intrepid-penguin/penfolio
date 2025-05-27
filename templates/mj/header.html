@@ -1,16 +1,16 @@
 {% load static %}
-<nav class="bg-gray-800 dark:bg-slate-800 text-white dark:text-slate-100 p-4">
+<nav class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-slate-700/60 text-gray-800 dark:text-slate-100 px-4 py-3">
     <div class="container mx-auto flex justify-between items-center">
         <!-- Logo -->
-        <a href="{% url 'home' %}" class="text-xl font-bold transition-opacity duration-200 ease-in-out hover:opacity-80">Pen<span><i class="fa-solid fa-code px-1"></i></span>Folio</a>
+        <a href="{% url 'home' %}" class="text-xl font-bold tracking-tight transition-opacity duration-200 ease-in-out hover:opacity-75">Pen<span><i class="fa-solid fa-code px-1"></i></span>Folio</a>
 
         <!-- Icons -->
         <div class="flex items-center space-x-4">
-            <a href="{% url 'create-j' %}" class="text-white dark:text-slate-100 hover:text-gray-300 dark:hover:text-slate-300 transition-all duration-200 ease-in-out hover:opacity-80 hover:scale-110">
-                <i class="fa-solid fa-pen"></i>
+            <a href="{% url 'create-j' %}" class="transition-all duration-200 ease-in-out hover:opacity-75 active:opacity-90 hover:scale-110 active:scale-100">
+                <i class="fa-solid fa-pen text-lg"></i> {# Explicitly set icon size if needed #}
             </a>
-            <button class="text-white dark:text-slate-100 hover:text-gray-300 dark:hover:text-slate-300 transition-all duration-200 ease-in-out hover:opacity-80 hover:scale-110 active:scale-95"> <!-- Removed md:hidden for now -->
-                <i class="fa-solid fa-bars"></i>
+            <button class="transition-all duration-200 ease-in-out hover:opacity-75 active:opacity-90 hover:scale-110 active:scale-100"> <!-- Removed md:hidden for now -->
+                <i class="fa-solid fa-bars text-lg"></i> {# Explicitly set icon size if needed #}
             </button>
         </div>
     </div>

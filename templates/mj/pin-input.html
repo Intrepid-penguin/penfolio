@@ -32,9 +32,9 @@
             <h2 class="text-xl font-semibold mb-4 text-gray-700 dark:text-slate-100 text-center tracking-tight">Enter PIN to View Secret Journal</h2> {# Centered title #}
             
             <div class="space-y-4"> {# Changed from flex to space-y for stacking input and button nicely in a modal #}
-                {% render_field form.pin class="appearance-none border dark:border-slate-600 rounded w-full py-2 px-3 text-gray-700 dark:text-slate-200 dark:bg-slate-700 dark:placeholder-slate-400 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Enter PIN" %}
+                {% render_field form.pin class="block w-full px-3 py-2.5 bg-white dark:bg-slate-800/60 border border-slate-300 dark:border-slate-700 rounded-md shadow-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-1 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition-colors duration-150 ease-in-out" placeholder="Enter PIN" %}
                 
-                <button type="submit" class="w-full bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 ease-in-out hover:opacity-80 hover:scale-105 active:scale-95">
+                <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2.5 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-800 focus:ring-indigo-500 transition-all duration-150 ease-in-out transform hover:scale-[1.02] active:scale-[0.98]">
                     Enter
                 </button>
             </div>
