@@ -52,7 +52,9 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'markdownx',
     'cloudinary_storage',
-    'cloudinary'
+    'cloudinary',
+    'tailwind',
+    'theme'
 ]
 
 MIDDLEWARE = [
@@ -179,3 +181,5 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL ='login'
 LOGIN_REDIRECT_URL ='home'
+
+TAILWIND_APP_NAME='theme'

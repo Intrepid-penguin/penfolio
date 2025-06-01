@@ -4,7 +4,7 @@
 {% block pinform %}{% endblock pinform %} {# This hides the PIN form section from home.html, relevant for Covert Journals view #}
 
 {% block content %}
-   <h1 class="text-3xl font-bold dark:text-slate-100 tracking-tight mb-6 text-center text-gray-700">Covert Journals</h1> {# Updated title style #}
+   <h1 class="text-3xl font-bold dark:text-slate-100 tracking-tight mb-6 text-left text-gray-700">Covert Journals</h1> {# Updated title style #}
    
    {% for journal in journals %}
        <a href="{% url 'view-j' journal.id %}" class="block mb-4 p-4 rounded-md shadow-sm bg-white dark:bg-slate-800 hover:dark:bg-slate-700/70 dark:border dark:border-slate-700/80 hover:dark:border-slate-600 transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-px">

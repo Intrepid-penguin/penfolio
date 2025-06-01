@@ -1,27 +1,17 @@
 {% extends 'mj/home.html' %}
-{% load static %} {# Standard practice, though search.html might not directly use static files itself #}
-{% load search %} {# For the highlight filter #}
+{% load static %} 
+{% load search %}
 
 {% block content %}
-   <h1 class="text-3xl font-bold dark:text-slate-100 tracking-tight mb-6 text-center text-gray-700">Search Results for: "<span class="text-indigo-600 dark:text-indigo-400">{{ request.GET.q }}</span>"</h1> {# Updated title style #}
+   <h1 class="text-3xl font-bold dark:text-slate-100 tracking-tight mb-6 text-left text-gray-700">Search Results for: "<span class="text-indigo-600 dark:text-indigo-400">{{ request.GET.q }}</span>"</h1> {# Updated title style #}
    
-   {% for result in results %} {# Assuming 'results' is the context variable for search results #}
+   {% for result in results %}
        <a href="{% url 'view-j' result.id %}" class="block mb-4 p-4 rounded-md shadow-sm bg-white dark:bg-slate-800 hover:dark:bg-slate-700/70 dark:border dark:border-slate-700/80 hover:dark:border-slate-600 transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-px">
-           <div> {# Inner structural div #}
-               <div class="flex justify-between items-start"> {# items-start for title wrapping #}
+           <div>
+               <div class="flex justify-between items-start">
                    <h4 class="text-lg font-semibold text-gray-800 dark:text-slate-100 mb-1 tracking-tight">
-                       {{ result.title|highlight:request.GET.q|safe }} {# Apply highlight filter, ensure |safe if highlight returns HTML #}
+                       {{ result.title|highlight:request.GET.q|safe }}
                    </h4>
-                   {# Optionally, add mood-specific styling based on result.mood_tag if needed #}
-                   {# Example:
-                       {% if result.mood_tag == 'ME' %}
-                           <i class="fas fa-smile text-green-500 ml-2"></i>
-                       {% elif result.mood_tag == 'GL' %}
-                           <i class="fas fa-cloud-rain text-blue-500 ml-2"></i>
-                       {% elif result.mood_tag == 'CO' %}  {# Assuming CO for Covert if it's searchable #}
-                           <i class="fas fa-user-secret text-purple-500 ml-2"></i>
-                       {% endif %}
-                   #}
                </div>
                <div class="flex justify-between items-center text-sm text-gray-600 dark:text-slate-400 mt-2">
                    <span>{{ result.date_added }}</span>

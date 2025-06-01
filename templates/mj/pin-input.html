@@ -1,10 +1,5 @@
 {% load widget_tweaks %}
 
-{# The outer div will be controlled by JS. Adding 'hidden' class initially if it's a modal.
-   The 'display="{{ display }}"' attribute from the original is preserved.
-   If 'display' is 'True' or similar, JS would remove 'hidden'.
-   For styling purposes, I'll omit 'hidden' in the code I write, assuming it's added by default by JS or backend.
-#}
 <div x-show="showPinModal" 
      x-transition:enter="transition ease-out duration-300"
      x-transition:enter-start="opacity-0"
@@ -26,12 +21,12 @@
          class="bg-white dark:bg-slate-800 dark:border dark:border-slate-700 dark:shadow-none p-6 rounded-lg shadow-xl mx-auto max-w-sm w-full"> {# max-w-sm for a PIN input modal #}
         <form method="POST" action="{% url 'c-journals' %}" autocomplete="off">
             {% csrf_token %}
-            <div class="flex justify-end mb-3"> {# Replaced <nav> with this div for the close button #}
+            <div class="flex justify-end mb-3">
                 <button @click="showPinModal = false" class="close text-gray-600 hover:text-gray-800 dark:text-slate-300 dark:hover:text-slate-100 text-2xl transition-all duration-200 ease-in-out hover:opacity-80 hover:scale-110 active:scale-95" type="button">&times;</button> {# Using &times; for a common close icon #}
             </div>
             <h2 class="text-xl font-semibold mb-4 text-gray-700 dark:text-slate-100 text-center tracking-tight">Enter PIN to View Secret Journal</h2> {# Centered title #}
             
-            <div class="space-y-4"> {# Changed from flex to space-y for stacking input and button nicely in a modal #}
+            <div class="space-y-4">
                 {% render_field form.pin class="block w-full px-3 py-2.5 bg-white dark:bg-slate-800/60 border border-slate-300 dark:border-slate-700 rounded-md shadow-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-1 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition-colors duration-150 ease-in-out" placeholder="Enter PIN" %}
                 
                 <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2.5 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-800 focus:ring-indigo-500 transition-all duration-150 ease-in-out transform hover:scale-[1.02] active:scale-[0.98]">

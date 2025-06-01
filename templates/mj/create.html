@@ -9,28 +9,20 @@
 {% endblock css %}
 
 {% block body %}
-<div class="container mx-auto p-4 max-w-3xl"> {# Added max-w-3xl #}
+<div class="container mx-auto p-4">
     <section class="flex justify-between items-center py-3 border-b dark:border-slate-700/60 mb-6">
         <a href="{% url 'home' %}" class="text-gray-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 ease-in-out">
             <i class="fa-solid fa-flask text-2xl"></i>
         </a>
-        {% comment %}
-        <div class="head flex items-baseline space-x-2"> 
-            <h3 class="day text-2xl font-semibold text-gray-800 dark:text-slate-100 tracking-tight"></h3>
-            <div class="time text-xl text-gray-600 dark:text-slate-100 tracking-tight">
-                <span class="hr"></span>:<span class="min"></span>
-            </div>  
-        </div>
-        {% endcomment %}
+
         <button type="submit" form="journal-form" class="inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 dark:bg-indigo-600 hover:bg-indigo-600 dark:hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-900 transition-colors duration-150 ease-in-out">
             Save Entry
         </button>
     </section>
-    <main>
-      <form method="POST" enctype="multipart/form-data" id="journal-form" class="space-y-6 p-6"> {# Added p-6 for internal padding #}
+    <main class="container px-4">
+      <form method="POST" enctype="multipart/form-data" id="journal-form" class="h-[80svh]">
         {% csrf_token %}
         
-        {# Display non-field errors and field errors at the top for visibility #}
         {% if form.non_field_errors %}
             <div class="bg-red-100 border border-red-400 text-red-700 dark:bg-red-900 dark:border-red-700 dark:text-red-300 px-4 py-3 rounded relative" role="alert">
                 <strong class="font-bold dark:text-red-200">Error!</strong>
@@ -40,21 +32,20 @@
 
         {% if form.errors %}
             {% for field, errors in form.errors.items %}
-                {% if field != '__all__' %} {# Already handled by non_field_errors, or can be more specific #}
+                {% if field != '__all__' %}
                     <div class="bg-red-100 border border-red-400 text-red-700 dark:bg-red-900 dark:border-red-700 dark:text-red-300 px-4 py-3 rounded relative" role="alert">
-                        <strong class="font-bold dark:text-red-200">Error in {{ form|get_field:field|get_label }}:</strong>
+                        <strong class="font-bold dark:text-red-200">Error in {{ form.errors }}:</strong>
                         <span class="block sm:inline">{{ errors|striptags }}</span>
                     </div>
                 {% endif %}
             {% endfor %}
         {% endif %}
 
-        <div> {# Title Field - Moved to top #}
-            <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1 sr-only">Title <span class="text-red-500">*</span>:</label> {# Label visually hidden for Notion style #}
-            {% render_field form.title class="block w-full bg-transparent dark:bg-transparent border-b-2 border-transparent focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-0 py-3 text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500/70 transition-colors duration-150 ease-in-out tracking-tight leading-tight" placeholder="Untitled Journal Entry" %}
+        <div class="bg-red-500 p-2">
+            {% render_field form.title autocomplete="off" class="block w-full h-full my-2 bg-transparent dark:bg-transparent focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-0 py-3 text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500/70 transition-colors duration-150 ease-in-out tracking-tight leading-tight p-2" placeholder="Untitled Journal Entry" %}
         </div>
         
-        <div x-data="{ activeTab: 'edit' }"> {# Alpine component for Edit/Preview Tabs #}
+        <div x-data="{ activeTab: 'edit' }"> 
             <div class="flex space-x-1 border-b border-gray-300 dark:border-slate-700 mb-4">
                 <button type="button" 
                         @click="activeTab = 'edit'" 
@@ -64,17 +55,19 @@
                         }"
                         class="px-3 py-2 font-medium text-sm focus:outline-none transition-colors duration-150 ease-in-out">Edit</button>
                 <button type="button" 
-                        @click="activeTab = 'preview'"
-                        :class="{
-                            'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-500 dark:border-indigo-400 -mb-px': activeTab === 'preview', 
-                            'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:border-b-2 hover:border-slate-300 dark:hover:border-slate-500 border-b-2 border-transparent -mb-px': activeTab !== 'preview'
-                        }"
-                        class="px-3 py-2 font-medium text-sm focus:outline-none transition-colors duration-150 ease-in-out">Preview</button>
+                    @click="activeTab = 'preview'"
+                    :class="{
+                        'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-500 dark:border-indigo-400 -mb-px': activeTab === 'preview', 
+                        'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:border-b-2 hover:border-slate-300 dark:hover:border-slate-500 border-b-2 border-transparent -mb-px': activeTab !== 'preview'
+                    }"
+                    class="px-3 py-2 font-medium text-sm focus:outline-none transition-colors duration-150 ease-in-out"
+                >
+                    Preview
+                </button>
             </div>
             
             <div x-show="activeTab === 'edit'" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
                  class="rounded-md focus-within:ring-1 focus-within:ring-indigo-500 dark:focus-within:ring-indigo-400 focus-within:border-indigo-500 dark:focus-within:border-indigo-400">
-                {# Removed label for content, as it's part of the editor usually or can be omitted for a cleaner look here #}
                 {% render_field form.content class="w-full border-gray-300 dark:border-slate-600 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" rows="15" %} 
             </div>
 
@@ -88,12 +81,12 @@
             </div>
         </div>
           
-        <div> {# Mood Selection - Moved after content #}
+        <div>
             <span class="block text-sm font-medium text-gray-700 dark:text-slate-400 mb-2">Mood <span class="text-red-500">*</span>:</span>
-            <div class="flex flex-wrap gap-2"> {# Changed gap here #}
+            <div class="flex flex-wrap gap-2">
                 {% for mood in form.mood_tag %}
-                    <div class="relative"> {# Wrapper for each mood choice #}
-                        {{ mood.tag|add_class:"sr-only peer" }} {# Hide actual radio, add 'peer' for peer-checked styling #}
+                    <div class="relative">
+                        {{ form.mood_tag|add_class:"sr-only peer" }}
                         <label for="{{ mood.id_for_label }}" 
                                class="px-3 py-1.5 rounded-full text-sm font-medium transition-colors duration-150 ease-in-out cursor-pointer border 
                                       text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-600 
@@ -107,10 +100,10 @@
             </div>
         </div>
      </form>
-     {% if form.errors and '__all__' in form.errors %} {# Displaying __all__ errors separately if they exist #}
+     {% if form.errors and '__all__' in form.errors %}
         <div class="mt-4 bg-red-100 border border-red-400 text-red-700 dark:bg-red-900 dark:border-red-700 dark:text-red-300 px-4 py-3 rounded relative" role="alert">
             <strong class="font-bold dark:text-red-200">Error!</strong>
-            <span class="block sm:inline">{{ form.errors.__all__ }}</span>
+            <span class="block sm:inline">{{ form.errors }}</span>
         </div>
      {% endif %}
     </main>

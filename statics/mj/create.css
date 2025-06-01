@@ -127,7 +127,6 @@ textarea {
 }
 
 input[type="text"]:active, input[type="text"]:hover {
-    border-bottom: 1px solid var(--grey);
     background: transparent;
 } 
    
