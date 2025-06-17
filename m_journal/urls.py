@@ -28,6 +28,7 @@ urlpatterns = [
     path('logout/', users_views.Logout, name='log-out'),
     path('', include('mj.urls')),
     path('todos/', include('todos.urls')),
+    path('users/', include('users.urls')),
     path('markdownx/', include('markdownx.urls')),
     re_path(r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),
 ]

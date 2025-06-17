@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import( 
-                   home, 
-                   createjournalview, 
+                   home,
+                   CreateJournalView as createjournalview,
                    viewJournal, 
                    updateJournal, 
                    MerryJournal, 
@@ -15,7 +15,7 @@ from .views import(
 urlpatterns = [
     path('', home.as_view(), name='home'),
     path('create-journal/', createjournalview.as_view(), name='create-j'),
-    path('view-journal/<int:pk>', viewJournal.as_view(), name='view-j' ),
+    path('journal/<int:pk>', viewJournal.as_view(), name='view-j' ),
     path('update-journal/<int:pk>', updateJournal.as_view(), name='update-j'),
     path('delete-journal/<int:pk>', deleteJournal.as_view(), name='delete'),
     path('journals-m/', MerryJournal.as_view(), name='m-journals'),

@@ -13,10 +13,21 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 
 import os
+from urllib.parse import urlparse
 from dotenv import load_dotenv
-import dj_database_url
-# Load environment variables from .env file
+
 load_dotenv()
+
+
+ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY')
+
+X_API_KEY = os.environ.get('X_API_KEY')
+X_API_SECRET = os.environ.get('X_API_KEY_SECRET')
+
+if not ENCRYPTION_KEY:
+    raise ValueError("ENCRYPTION_KEY must be set in the environment variables.")
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -98,13 +109,17 @@ WSGI_APPLICATION = 'm_journal.wsgi.application'
 #         'NAME': BASE_DIR / 'dbm.sqlite3',
 #     }
 # }
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 DATABASES = {
-    'default': dj_database_url.config(
-        default= os.getenv('DATABASE_URL'),
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': tmpPostgres.path.replace('/', ''),
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
+        'PORT': 5432,
+    }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
