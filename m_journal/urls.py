@@ -20,15 +20,29 @@ from users import views as users_views
 from django.conf.urls.static import static
 from django.conf import settings
 from django.views.static import serve
+from allauth.account.urls import urlpatterns as original_allauth_urls
+from allauth.socialaccount.providers.oauth2.urls import default_urlpatterns
+from allauth.socialaccount.providers.twitter_oauth2.provider import TwitterOAuth2Provider
+
+
+filtered_allauth_urls = [
+    url for url in original_allauth_urls 
+    if url.name not in ['account_login', 'account_signup', 'account_logout']
+] + [
+    path('', include('allauth.socialaccount.urls')),
+    path("3rdparty/", include("allauth.socialaccount.urls"))
+] + default_urlpatterns(TwitterOAuth2Provider)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', auth_views.LoginView.as_view(template_name='users/auth.html'), name='login'),
-    path('signup/', users_views.register, name='sign-up'),
-    path('logout/', users_views.Logout, name='log-out'),
+    path('login/', auth_views.LoginView.as_view(template_name='users/auth.html'), name='account_login'),
+    path('signup/', users_views.RegisterView.as_view(), name='account_signup'),
+    path('logout/', users_views.LogoutView.as_view(), name='log-out'),
+    path('accounts/', include(filtered_allauth_urls)),
     path('', include('mj.urls')),
     path('todos/', include('todos.urls')),
-    path('users/', include('users.urls')),
+    # path('users/', include('users.urls')),
     path('markdownx/', include('markdownx.urls')),
     re_path(r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),
 ]

@@ -3,13 +3,13 @@
 {% load widget_tweaks %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'markdownx/admin/css/markdownx.css' %}">
+{% comment %} <link rel="stylesheet" href="{% static 'markdownx/admin/css/markdownx.css' %}"> {% endcomment %}
 <script src="{% static 'markdownx/js/markdownx.js' %}"></script>
-<link rel="stylesheet" href="{% static 'mj/create.css' %}">
+{% comment %} <link rel="stylesheet" href="{% static 'mj/create.css' %}"> {% endcomment %}
 {% endblock css %}
 
 {% block body %}
-<div class="container mx-auto p-4">
+<div class="container mx-auto p-4 h-full">
     <section class="flex justify-between items-center py-3 border-b dark:border-slate-700/60 mb-6">
         <a href="{% url 'home' %}" class="text-gray-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 ease-in-out">
             <i class="fa-solid fa-flask text-2xl"></i>
@@ -20,7 +20,7 @@
         </button>
     </section>
     <main class="container px-4">
-      <form method="POST" enctype="multipart/form-data" id="journal-form" class="h-[80svh]">
+      <form method="POST" enctype="multipart/form-data" id="journal-form" class="h-full">
         {% csrf_token %}
         
         {% if form.non_field_errors %}
@@ -41,12 +41,10 @@
             {% endfor %}
         {% endif %}
 
-        <div class="bg-red-500 p-2">
-            {% render_field form.title autocomplete="off" class="block w-full h-full my-2 bg-transparent dark:bg-transparent focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-0 py-3 text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500/70 transition-colors duration-150 ease-in-out tracking-tight leading-tight p-2" placeholder="Untitled Journal Entry" %}
-        </div>
+        
         
         <div x-data="{ activeTab: 'edit' }"> 
-            <div class="flex space-x-1 border-b border-gray-300 dark:border-slate-700 mb-4">
+            {% comment %} <div class="flex space-x-1 border-b border-gray-300 dark:border-slate-700 mb-4">
                 <button type="button" 
                         @click="activeTab = 'edit'" 
                         :class="{
@@ -64,41 +62,42 @@
                 >
                     Preview
                 </button>
+            </div> {% endcomment %}
+            <div class="p-2">
+                {% render_field form.title autocomplete="off" class="block w-full h-full my-2 bg-transparent outline-none focus:outline-none border-none focus:ring-0 py-3 text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500/70 transition-colors duration-150 ease-in-out tracking-tight leading-tight p-2" placeholder="Untitled Journal Entry" %}
             </div>
-            
-            <div x-show="activeTab === 'edit'" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-                 class="rounded-md focus-within:ring-1 focus-within:ring-indigo-500 dark:focus-within:ring-indigo-400 focus-within:border-indigo-500 dark:focus-within:border-indigo-400">
-                {% render_field form.content class="w-full border-gray-300 dark:border-slate-600 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" rows="15" %} 
+            <div x-show="activeTab === 'edit'" 
+                x-transition:enter="transition ease-out duration-100" 
+                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" 
+                x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" 
+                x-transition:leave-end="opacity-0"
+                class="outline-none border-none"
+            >
+                {% render_field form.content class="content text-xl text-white outline-none border-none focus:ring-0 placeholder:text-3xl placeholder:font-bold placeholder-slate-400 dark:placeholder-slate-500/70" placeholder="Journal Entry"%} 
             </div>
 
-            <div x-show="activeTab === 'preview'" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+            
+
+            {% comment %} <div x-show="activeTab === 'preview'" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
                  class="prose dark:prose-invert lg:prose-xl max-w-none p-4 border dark:border-slate-700 rounded min-h-[300px] bg-gray-50 dark:bg-slate-800/30">
                  {% if form.instance and form.instance.pk %}
                    {{ form.instance.content|safe }}
                  {% else %}
                    <p class="text-gray-500 dark:text-slate-400 italic">The rendered preview will appear here once the entry is saved.</p>
                  {% endif %}
-            </div>
+            </div> {% endcomment %}
         </div>
-          
-        <div>
-            <span class="block text-sm font-medium text-gray-700 dark:text-slate-400 mb-2">Mood <span class="text-red-500">*</span>:</span>
-            <div class="flex flex-wrap gap-2">
+
+        <div class="w-[19.5rem] mt-10 px-4">
+            <div class="sel-c flex text-xl">
                 {% for mood in form.mood_tag %}
-                    <div class="relative">
-                        {{ form.mood_tag|add_class:"sr-only peer" }}
-                        <label for="{{ mood.id_for_label }}" 
-                               class="px-3 py-1.5 rounded-full text-sm font-medium transition-colors duration-150 ease-in-out cursor-pointer border 
-                                      text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-600 
-                                      hover:bg-slate-100 hover:border-slate-400 dark:hover:bg-slate-700 dark:hover:border-slate-500
-                                      peer-checked:bg-indigo-500 peer-checked:text-white peer-checked:border-indigo-500
-                                      dark:peer-checked:bg-indigo-500 dark:peer-checked:text-white dark:peer-checked:border-indigo-500">
-                            {{ mood.choice_label }}
-                        </label>
-                    </div>
+                    {{mood.tag}}
+                    <label for="{{mood.id_for_label}}">{{mood.choice_label}}</label><br>
                 {% endfor %}
+                
             </div>
         </div>
+
      </form>
      {% if form.errors and '__all__' in form.errors %}
         <div class="mt-4 bg-red-100 border border-red-400 text-red-700 dark:bg-red-900 dark:border-red-700 dark:text-red-300 px-4 py-3 rounded relative" role="alert">
@@ -107,6 +106,7 @@
         </div>
      {% endif %}
     </main>
+</div>
 {% endblock body %}
 
 {% block script %}

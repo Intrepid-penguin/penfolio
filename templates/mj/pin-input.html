@@ -19,7 +19,7 @@
          x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
          x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
          class="bg-white dark:bg-slate-800 dark:border dark:border-slate-700 dark:shadow-none p-6 rounded-lg shadow-xl mx-auto max-w-sm w-full"> {# max-w-sm for a PIN input modal #}
-        <form method="POST" action="{% url 'c-journals' %}" autocomplete="off">
+        <form method="POST" :action="pinFormAction" autocomplete="off">
             {% csrf_token %}
             <div class="flex justify-end mb-3">
                 <button @click="showPinModal = false" class="close text-gray-600 hover:text-gray-800 dark:text-slate-300 dark:hover:text-slate-100 text-2xl transition-all duration-200 ease-in-out hover:opacity-80 hover:scale-110 active:scale-95" type="button">&times;</button> {# Using &times; for a common close icon #}

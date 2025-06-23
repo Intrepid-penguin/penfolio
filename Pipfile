@@ -16,6 +16,11 @@ python-dotenv = "*"
 psycopg2-binary = "*"
 dj-database-url = "*"
 uvicorn = "*"
+django-allauth = {extras = ["socialaccount"], version = "*"}
+ntscraper = "*"
+snscrape = "*"
+twscrape = "*"
+google-genai = "*"
 
 [dev-packages]
 

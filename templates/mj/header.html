@@ -4,13 +4,15 @@
         <!-- Logo -->
         <a href="{% url 'home' %}" class="text-xl font-bold tracking-tight transition-opacity duration-200 ease-in-out hover:opacity-75">Pen<span><i class="fa-solid fa-code px-1"></i></span>Folio</a>
 
-        <!-- Icons -->
         <div class="flex items-center space-x-4">
             <a href="{% url 'create-j' %}" class="transition-all duration-200 ease-in-out hover:opacity-75 active:opacity-90 hover:scale-110 active:scale-100">
-                <i class="fa-solid fa-pen text-lg"></i> {# Explicitly set icon size if needed #}
+                <i class="fa-solid fa-pen text-lg"></i>
             </a>
-            <button class="transition-all duration-200 ease-in-out hover:opacity-75 active:opacity-90 hover:scale-110 active:scale-100"> <!-- Removed md:hidden for now -->
-                <i class="fa-solid fa-bars text-lg"></i> {# Explicitly set icon size if needed #}
+            <a href="{% url 'log-out' %}" class="transition-all duration-200 ease-in-out hover:opacity-75 active:opacity-90 hover:scale-110 active:scale-100">
+                <i class="fa-solid fa-sign-out-alt text-lg"></i>
+            </a>
+            <button class="transition-all duration-200 ease-in-out hover:opacity-75 active:opacity-90 hover:scale-110 active:scale-100">
+                <i class="fa-solid fa-bars text-lg"></i>
             </button>
         </div>
     </div>

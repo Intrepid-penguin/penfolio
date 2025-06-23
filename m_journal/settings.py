@@ -23,6 +23,17 @@ ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY')
 
 X_API_KEY = os.environ.get('X_API_KEY')
 X_API_SECRET = os.environ.get('X_API_KEY_SECRET')
+X_CLIENT_ID = os.environ.get('X_CLIENT_ID')
+X_CLIENT_SECRET = os.environ.get('X_CLIENT_SECRET')
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
+
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_HOST_PASSWORD= os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
+EMAIL_PORT= 587
+EMAIL_USE_TLS=True
 
 if not ENCRYPTION_KEY:
     raise ValueError("ENCRYPTION_KEY must be set in the environment variables.")
@@ -54,12 +65,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Local apps
     'mj',
     'users',
     'todos',
     'blog',
     
     #3rd party packages
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.twitter_oauth2',
     'widget_tweaks',
     'markdownx',
     'cloudinary_storage',
@@ -77,6 +94,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    "allauth.account.middleware.AccountMiddleware"
 ]
 
 ROOT_URLCONF = 'm_journal.urls'
@@ -99,6 +118,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'm_journal.wsgi.application'
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'twitter_oauth2': { 
+        # 'SCOPE': [
+        #     'offline.access',
+        #     'users.read',
+        #     'tweet.read',
+        # ],
+        # 'OAUTH_PKCE_ENABLED': True,
+        'NAME': 'Penfolio',
+        'APP': {
+            'client_id': X_CLIENT_ID,
+            'secret': X_CLIENT_SECRET,
+            'key': '',
+        }
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -194,7 +234,7 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_URL ='login'
+LOGIN_URL ='account_login'
 LOGIN_REDIRECT_URL ='home'
 
 TAILWIND_APP_NAME='theme'

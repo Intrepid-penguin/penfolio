@@ -5,4 +5,7 @@ db*
 .vs*
 static
 .vercel
+mock.py
+x.py
+.cache
 **/node_modules

@@ -1,16 +1,17 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from allauth.account.forms import SignupForm
 from django import forms
 from .models import UserProfile
 
 
 
-class UserRegisterForm(UserCreationForm):
+class UserRegisterForm(SignupForm):
     email = forms.EmailField()
     
-    class Meta:
-       model = User
-       fields = ['username', 'email', 'password1', 'password2']
+    def save(self, request):
+        user = super().save(request)
+        return user
        
 class CovertuserForm(forms.ModelForm):
     pin = forms.CharField(
