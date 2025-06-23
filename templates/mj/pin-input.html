@@ -1,12 +1,38 @@
-<div class="cform" open="false" display="{{ display }}">
-    <form method="POST" action="{% url 'c-journals' %}" autocomplete="off">
-        {% csrf_token %}
-        <nav><button class="close" type="button">close</button></nav>
-        <h2>Enter pin to view your secret journal </h2>
-        <div class="input-s">
-            {{ form.pin }}
-            <!-- <input type="text" name="pin" value="{{request.GET.pin}}" /> -->
-            <button type="submit">enter</button>
-        </div>
-    </form>
+{% load widget_tweaks %}
+
+<div x-show="showPinModal" 
+     x-transition:enter="transition ease-out duration-300"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-200"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     class="cform fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center p-4 z-40" 
+     style="display: none;" {# Initially hidden, Alpine controls it #}
+     >
+    <div @click.away="showPinModal = false" 
+         x-show="showPinModal"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+         x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+         x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+         class="bg-white dark:bg-slate-800 dark:border dark:border-slate-700 dark:shadow-none p-6 rounded-lg shadow-xl mx-auto max-w-sm w-full"> {# max-w-sm for a PIN input modal #}
+        <form method="POST" :action="pinFormAction" autocomplete="off">
+            {% csrf_token %}
+            <div class="flex justify-end mb-3">
+                <button @click="showPinModal = false" class="close text-gray-600 hover:text-gray-800 dark:text-slate-300 dark:hover:text-slate-100 text-2xl transition-all duration-200 ease-in-out hover:opacity-80 hover:scale-110 active:scale-95" type="button">&times;</button> {# Using &times; for a common close icon #}
+            </div>
+            <h2 class="text-xl font-semibold mb-4 text-gray-700 dark:text-slate-100 text-center tracking-tight">Enter PIN to View Secret Journal</h2> {# Centered title #}
+            
+            <div class="space-y-4">
+                {% render_field form.pin class="block w-full px-3 py-2.5 bg-white dark:bg-slate-800/60 border border-slate-300 dark:border-slate-700 rounded-md shadow-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-1 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition-colors duration-150 ease-in-out" placeholder="Enter PIN" %}
+                
+                <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2.5 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-800 focus:ring-indigo-500 transition-all duration-150 ease-in-out transform hover:scale-[1.02] active:scale-[0.98]">
+                    Enter
+                </button>
+            </div>
+        </form>
+    </div>
 </div>

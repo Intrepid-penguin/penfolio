@@ -3,79 +3,110 @@
 {% load widget_tweaks %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'markdownx/admin/css/markdownx.css' %}">
+{% comment %} <link rel="stylesheet" href="{% static 'markdownx/admin/css/markdownx.css' %}"> {% endcomment %}
 <script src="{% static 'markdownx/js/markdownx.js' %}"></script>
-<link rel="stylesheet" href="{% static 'mj/create.css' %}">
+{% comment %} <link rel="stylesheet" href="{% static 'mj/create.css' %}"> {% endcomment %}
 {% endblock css %}
 
 {% block body %}
-<section>
-        <div class="head">
-            <h3 class="day"></h3>
-            <div class="time">
-                <span class="hr"></span>
-                <span class="dot">:</span>
-                <span class="min"></span>
-            </div>  
-        </div>
-        <a href="{% url 'home' %}" style="color: whitesmoke;"><i class="fa-solid fa-flask"></i></a>
+<div class="container mx-auto p-4 h-full">
+    <section class="flex justify-between items-center py-3 border-b dark:border-slate-700/60 mb-6">
+        <a href="{% url 'home' %}" class="text-gray-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 ease-in-out">
+            <i class="fa-solid fa-flask text-2xl"></i>
+        </a>
+
+        <button type="submit" form="journal-form" class="inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 dark:bg-indigo-600 hover:bg-indigo-600 dark:hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-900 transition-colors duration-150 ease-in-out">
+            Save Entry
+        </button>
     </section>
-    <main>
-      <form method="POST" enctype="multipart/form-data">
+    <main class="container px-4">
+      <form method="POST" enctype="multipart/form-data" id="journal-form" class="h-full">
         {% csrf_token %}
         
-        <div class="input" data-preview="false">
-            <button type="button" id="preview-btn">Preview</button>
-            
-            {% render_field form.content type="text" class="content"%}<br>
-            
-           <div class="oth">
-               
-            <label>Title <span class="star">*</span> : </label>
-            {% render_field form.title type="text"%}<br>
-           <div class="l">
-            {% comment %} <label class="l">Link-1 : </label>
-            {% render_field form.link1 type="text" class="i1" %}<br>
-           
-            
-            <label class="l">Link-2 : </label>
-            {% render_field form.link2 type="text" class="i1" %}<br> {% endcomment %}
-           </div>
-          </div>
-          
-          
-            <div class="top">
-                <div class="submit" type="submit">
-                    <button type="submit">
-                    <i class="fa-solid fa-check-to-slot"></i>
-                    </button>
-                </div>
-                <div class="sel-c">
-                    {% for mood in form.mood_tag %}
-                        {{mood.tag}}
-                        <label for="{{mood.id_for_label}}">{{mood.choice_label}}</label><br>
-                    {% endfor %}
-
-                    {% comment %} <input type="radio" id="blithe" name="class" value="Blithe" checked>                   
-                    <label for="blithe">Merry</label><br>
-
-                    <input type="radio" id="gloomy" name="class" value="Gloomy">
-                    <label for="gloomy">Gloomy</label><br>
-
-                    <input type="radio" id="covert" name="class" value="Covert">
-                    <label for="covert">Covert</label><br> {% endcomment %}
-
-
-                    
-                </div>
+        {% if form.non_field_errors %}
+            <div class="bg-red-100 border border-red-400 text-red-700 dark:bg-red-900 dark:border-red-700 dark:text-red-300 px-4 py-3 rounded relative" role="alert">
+                <strong class="font-bold dark:text-red-200">Error!</strong>
+                <span class="block sm:inline">{{ form.non_field_errors }}</span>
             </div>
-           
+        {% endif %}
+
+        {% if form.errors %}
+            {% for field, errors in form.errors.items %}
+                {% if field != '__all__' %}
+                    <div class="bg-red-100 border border-red-400 text-red-700 dark:bg-red-900 dark:border-red-700 dark:text-red-300 px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold dark:text-red-200">Error in {{ form.errors }}:</strong>
+                        <span class="block sm:inline">{{ errors|striptags }}</span>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        
+        
+        <div x-data="{ activeTab: 'edit' }"> 
+            {% comment %} <div class="flex space-x-1 border-b border-gray-300 dark:border-slate-700 mb-4">
+                <button type="button" 
+                        @click="activeTab = 'edit'" 
+                        :class="{
+                            'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-500 dark:border-indigo-400 -mb-px': activeTab === 'edit', 
+                            'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:border-b-2 hover:border-slate-300 dark:hover:border-slate-500 border-b-2 border-transparent -mb-px': activeTab !== 'edit'
+                        }"
+                        class="px-3 py-2 font-medium text-sm focus:outline-none transition-colors duration-150 ease-in-out">Edit</button>
+                <button type="button" 
+                    @click="activeTab = 'preview'"
+                    :class="{
+                        'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-500 dark:border-indigo-400 -mb-px': activeTab === 'preview', 
+                        'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:border-b-2 hover:border-slate-300 dark:hover:border-slate-500 border-b-2 border-transparent -mb-px': activeTab !== 'preview'
+                    }"
+                    class="px-3 py-2 font-medium text-sm focus:outline-none transition-colors duration-150 ease-in-out"
+                >
+                    Preview
+                </button>
+            </div> {% endcomment %}
+            <div class="p-2">
+                {% render_field form.title autocomplete="off" class="block w-full h-full my-2 bg-transparent outline-none focus:outline-none border-none focus:ring-0 py-3 text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500/70 transition-colors duration-150 ease-in-out tracking-tight leading-tight p-2" placeholder="Untitled Journal Entry" %}
+            </div>
+            <div x-show="activeTab === 'edit'" 
+                x-transition:enter="transition ease-out duration-100" 
+                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" 
+                x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" 
+                x-transition:leave-end="opacity-0"
+                class="outline-none border-none"
+            >
+                {% render_field form.content class="content text-xl text-white outline-none border-none focus:ring-0 placeholder:text-3xl placeholder:font-bold placeholder-slate-400 dark:placeholder-slate-500/70" placeholder="Journal Entry"%} 
+            </div>
+
+            
+
+            {% comment %} <div x-show="activeTab === 'preview'" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                 class="prose dark:prose-invert lg:prose-xl max-w-none p-4 border dark:border-slate-700 rounded min-h-[300px] bg-gray-50 dark:bg-slate-800/30">
+                 {% if form.instance and form.instance.pk %}
+                   {{ form.instance.content|safe }}
+                 {% else %}
+                   <p class="text-gray-500 dark:text-slate-400 italic">The rendered preview will appear here once the entry is saved.</p>
+                 {% endif %}
+            </div> {% endcomment %}
         </div>
-        
-        
+
+        <div class="w-[19.5rem] mt-10 px-4">
+            <div class="sel-c flex text-xl">
+                {% for mood in form.mood_tag %}
+                    {{mood.tag}}
+                    <label for="{{mood.id_for_label}}">{{mood.choice_label}}</label><br>
+                {% endfor %}
+                
+            </div>
+        </div>
+
      </form>
-     {{form.error}}
+     {% if form.errors and '__all__' in form.errors %}
+        <div class="mt-4 bg-red-100 border border-red-400 text-red-700 dark:bg-red-900 dark:border-red-700 dark:text-red-300 px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold dark:text-red-200">Error!</strong>
+            <span class="block sm:inline">{{ form.errors }}</span>
+        </div>
+     {% endif %}
     </main>
+</div>
 {% endblock body %}
 
 {% block script %}

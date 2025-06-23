@@ -1,17 +1,31 @@
 {% extends 'mj/home.html' %}
+{% load static %}
 
-{% block j-content %}
-
-<div class="j1 c">
-    <a href="{% url 'view-j' journal.id %}"> 
-        <div class="txt">
-            <h4>{{journal.title}}</h4>
-            <div class="txt-b">
-                <h2>{{journal.date_added}}</h2>
-                <i class="fa-solid fa-angle-right"></i>
+{% block content %}
+   <h1 class="text-3xl font-bold dark:text-slate-100 tracking-tight mb-6 text-left text-blue-600">Gloomy Journals</h1>
+   {% for journal in journals %}
+       <a href="{% url 'view-j' journal.id %}" class="block mb-4 p-4 rounded-md shadow-sm bg-white dark:bg-slate-800 hover:dark:bg-slate-700/70 dark:border dark:border-slate-700/80 hover:dark:border-slate-600 transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-px">
+           <div class="flex items-center space-x-3">
+                <span class="w-3 h-12 rounded-full inline-block
+                {% if journal.mood_tag == 'CO' %} bg-[rgba(255,65,82,255)]
+                {% elif journal.mood_tag == 'ME' %} bg-[rgb(79,134,247)]
+                {% elif journal.mood_tag == 'GL' %} bg-[rgba(255,228,211,255)]
+                {% else %} bg-gray-300 {% endif %}">
+                </span>
+                <div class="flex-grow">
+                    <div class="flex justify-between items-start">
+                        <h4 class="text-lg font-semibold text-gray-800 dark:text-slate-100 mb-1 tracking-tight">{{journal.title}}</h4>
+                    </div>
+                    <div class="flex justify-between items-center text-sm text-gray-600 dark:text-slate-400">
+                        <span>{{journal.date_added}}</span>
+                        <i class="fa-solid fa-angle-right text-gray-500 dark:text-slate-500"></i>
+                    </div>
+                </div>
             </div>
-        </div> 
-    </a>
-</div>
-
-{% endblock j-content %}
+       </a>
+   {% empty %}
+       <h2 class="text-gray-500 dark:text-gray-400 text-center py-10 text-lg">
+           Sorry, no journal entry found in the Gloomy journal log.
+       </h2>
+   {% endfor %}
+{% endblock content %}

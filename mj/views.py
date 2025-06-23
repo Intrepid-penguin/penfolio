@@ -1,7 +1,9 @@
-from typing import Any, Dict
+from datetime import timedelta, timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.views.generic import DetailView, CreateView, UpdateView, ListView, DeleteView
+
+from users.models import UserProfile
 from .forms import journalform, Pinform
 from .models import Journal
 from django.contrib import messages
@@ -10,8 +12,10 @@ from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 import cloudinary.uploader
-from markdownx.utils import markdownify
 from django.http import JsonResponse
+from django.views import View
+from django.utils.http import urlencode
+from .utils import generate_tweet, get_twitter_inspo
 
 
 
@@ -22,12 +26,13 @@ class JournalBaseListView(LoginRequiredMixin, ListView):
     fields = None
     template_name = None
     mood_tag = None
-
+    paginate_by = 5  # Show 10 journals per page
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         data = self.request.GET.get('display')
         context['form'] = Pinform()
-        if data != None:
+        if data is not None:
             context['display'] = data
         else:
             context['display'] = 'false'
@@ -36,39 +41,180 @@ class JournalBaseListView(LoginRequiredMixin, ListView):
     
     def get_queryset(self):
         user = get_object_or_404(User, username=self.request.user)
-        if self.mood_tag != None:
+        if self.mood_tag is not None:
             return Journal.objects.filter(owner=user, mood_tag=self.mood_tag).order_by('-date_added')
         return Journal.objects.filter(owner=user).order_by('-date_added')
 
 class home(JournalBaseListView):
     fields = ['title', 'date_added', 'mood_tag']
     template_name = 'mj/home.html'
-
-class createjournalview(LoginRequiredMixin, CreateView):
+class CreateJournalView(LoginRequiredMixin, CreateView):
     template_name = 'mj/create.html'
     form_class = journalform
     success_url = '/'
     
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        return super().form_valid(form)
+        print(form.cleaned_data['mood_tag'])
+        if form.cleaned_data['mood_tag'] == 'CO':
+            if not self.request.user.user_profile.pin:
+                messages.info(self.request, 'You must set a PIN in your profile to create a Covert journal.')
+            return self.render_to_response(self.get_context_data(form=form))
+        response = super().form_valid(form)
+    
+        journal = self.object
+        self.update_streak(journal)
+        
+        return response
+
+    def update_streak(self, journal):
+        """Update user's streak based on the journal creation date"""
+        user = self.request.user
+        user_profile, created = UserProfile.objects.get_or_create(user=user)
+        
+        journal_date = journal.date_added.date()
+        
+        if user_profile.last_content_date == journal_date:
+            return  # Already counted for today
+        
+        if user_profile.last_content_date:
+            # Check if consecutive day
+            if user_profile.last_content_date == journal_date - timedelta(days=1):
+                user_profile.current_streak += 1
+            else:
+                # Reset streak if not consecutive
+                user_profile.current_streak = 1
+        else:
+            # First journal entry
+            user_profile.current_streak = 1
+        
+        # Update longest streak if needed
+        if user_profile.current_streak > user_profile.longest_streak:
+            user_profile.longest_streak = user_profile.current_streak
+        
+        # Update last content date
+        user_profile.last_content_date = journal_date
+        user_profile.save()
     
 class viewJournal(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Journal
     template_name = "mj/j-detail.html"
+    form_class = Pinform
     
     def test_func(self):
         journal = self.get_object()
-        return self.request.user == journal.owner 
+        if journal.mood_tag == 'CO':
+            return self.request.user == journal.owner
+        return self.request.user == journal.owner
+    
+    def get(self, request, *args, **kwargs):
+        journal = self.get_object()
+        if journal.mood_tag == 'CO':
+            if not request.user.user_profile.pin:
+                messages.error(request, 'You need to set a pin to view covert journals.')
+                return redirect('/')
+
+            session_key = f'covert_journal_verified_{journal.id}'
+            if not request.session.get(session_key, False):
+                messages.error(request, 'Unauthorized access to covert journal. Why are you trying to peek?')
+                return redirect('/')
+        
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        journal = self.get_object()
+        if journal.mood_tag == 'CO':
+            form = self.form_class(request.POST)
+            if form.is_valid():
+                pin = request.POST.get('pin')
+                    
+                if check_password(pin, self.request.user.user_profile.pin):
+                    session_key = f'covert_journal_verified_{journal.id}'
+                    request.session[session_key] = True
+                    return super().get(request, *args, **kwargs)
+                else:
+                    messages.error(request, 'Incorrect pin entered')
+                    return redirect('/')
+            else:
+                messages.error(request, 'Incorrect pin entered')
+                return redirect('/')
+        return super().post(request, *args, **kwargs)
+
+    def dispatch(self, request, *args, **kwargs):
+        journal = self.get_object()
+        session_key = f'covert_journal_verified_{journal.id}'
+        
+        # If this is a GET request and not the initial load, clear the session
+        if request.method == 'GET' and request.META.get('HTTP_REFERER'):
+            if session_key in request.session:
+                del request.session[session_key]
+        
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        journal = self.get_object()
+        
+        if journal.mood_tag == 'CO' and self.request.method != 'POST':
+            context['requires_pin'] = True
+            context['form'] = self.form_class()
+        
         context.update(
             title = self.object.title,
-            content = self.object.formatted_markdown,
+            content = self.object.content,
             date = self.object.date_added,
          )
+        print(context)
         return context
+    
+class TweetJournalView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """
+    A view to handle converting a journal entry into a tweet.
+    On POST, it constructs a Twitter intent URL with the journal's content
+    and redirects the user to Twitter to post it.
+    """
+    def test_func(self):
+        journal = self.get_journal()
+        # Ensure the user owns the journal and it's not a covert entry
+        return journal.owner == self.request.user and journal.mood_tag != 'CO'
+
+    def handle_no_permission(self):
+        messages.error(self.request, "You are not authorized to tweet this journal, or it is a covert journal.")
+        return redirect('home')
+
+    def get_journal(self):
+        if not hasattr(self, '_journal'):
+            pk = self.kwargs.get('pk')
+            self._journal = get_object_or_404(Journal, pk=pk)
+        return self._journal
+
+    def post(self, request, *args, **kwargs):
+        journal = self.get_journal()
+
+        x_user_inspo = request.POST.get('twitter-handle', '').strip()
+        print(x_user_inspo)
+        
+        print(f"Received inspiration: {x_user_inspo}")
+        
+        x_user_tweet = get_twitter_inspo(x_user_inspo, scrolls=10, proxy=None)
+        
+        if x_user_tweet is None:
+            messages.error(request, f"Could not find tweets for user {x_user_inspo} or user doesn't exist.")
+            return redirect('j-detail', pk=journal.pk)
+        
+        tweet = generate_tweet(x_user_tweet, journal.content)
+        print(f"Generated tweet: {tweet}")
+
+        # Construct the Twitter intent URL
+        base_url = "https://twitter.com/intent/tweet"
+        params = urlencode({'text': tweet})
+        tweet_url = f"{base_url}?{params}"
+
+        return redirect(tweet_url)
+
+    def get(self, request, *args, **kwargs):
+        pk = self.kwargs.get('pk')
+        return redirect('j-detail', pk=pk)
      
 class updateJournal(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Journal
@@ -99,7 +245,7 @@ class GloomyJournal(JournalBaseListView):
     template_name = 'mj/g-journal.html'
     mood_tag='GL'
              
-class listCJournal(LoginRequiredMixin, UserPassesTestMixin, ListView):
+class listCJournal(UserPassesTestMixin, JournalBaseListView):
     model = Journal
     context_object_name = 'journals'
     fields = ['title', 'date_added']
@@ -132,12 +278,11 @@ class listCJournal(LoginRequiredMixin, UserPassesTestMixin, ListView):
     def test_func(self):
         user = get_object_or_404(User, username=self.request.user)
         pin = self.request.POST.get('pin')
-        return check_password(pin, user.covertuser.pin)
+        return check_password(pin, user.user_profile.pin)
     
     def handle_no_permission(self):
         messages.error(self.request, 'oops! you have entered an incorrect pin or you are unauthourized to view the Covert page')
         view = self.get_route_name()
-        data ={'display' : True}
         if '?' in view:
             return redirect(view)
         return redirect(f'{view}?display=true')
@@ -183,3 +328,48 @@ def custom_markdownx_upload(request):
         # Return the URL in a format that Markdownx expects
         return JsonResponse({'image_code': f'![alt text]({image_url})'})
     return JsonResponse({'error': 'Upload failed'}, status=400)
+
+def update_streak_on_creation(user):
+    """Updates the current and longest streak for a user when content is created."""
+    try:
+        user_profile = user.user_profile
+    except UserProfile.DoesNotExist:
+        return  # Should not happen due to signals, but for safety
+
+    today = timezone.now().date()
+
+    if user_profile.last_content_date == today:
+        # User already created content today, no streak change
+        return
+
+    if user_profile.last_content_date == today - timedelta(days=1):
+        # Streak continues
+        user_profile.current_streak += 1
+    else:
+        # Streak broken or this is the first content
+        user_profile.current_streak = 1
+
+    user_profile.longest_streak = max(user_profile.longest_streak, user_profile.current_streak)
+    user_profile.last_content_date = today
+    user_profile.save()
+    
+def update_streak_based_on_journal(user, journal):
+    """Update streak based on the journal's actual creation date"""
+    try:
+        user_profile = user.user_profile
+    except UserProfile.DoesNotExist:
+        return
+
+    journal_date = journal.date_added.date()
+    
+    if user_profile.last_content_date == journal_date:
+        return
+
+    if user_profile.last_content_date == journal_date - timedelta(days=1):
+        user_profile.current_streak += 1
+    else:
+        user_profile.current_streak = 1
+
+    user_profile.longest_streak = max(user_profile.longest_streak, user_profile.current_streak)
+    user_profile.last_content_date = journal_date
+    user_profile.save()

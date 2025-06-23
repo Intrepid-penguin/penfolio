@@ -127,7 +127,6 @@ textarea {
 }
 
 input[type="text"]:active, input[type="text"]:hover {
-    border-bottom: 1px solid var(--grey);
     background: transparent;
 } 
    
@@ -156,6 +155,7 @@ input[type="text"]:active, input[type="text"]:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+    appearance: none;
     /*padding-block: 0.2rem;*/
     border-radius: 1rem;
     /*text-align: center;

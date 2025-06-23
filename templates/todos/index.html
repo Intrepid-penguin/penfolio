@@ -1,16 +1,24 @@
 {% extends 'meta.html' %}
-
+{% load static %} {# Good practice, though may not be strictly needed for this specific template #}
 
 {% block body %}
-    <section>
-        <ul>
-            {% for todo in todos %}
-                <li>{{ todo }} -- {{ todo.status}} -- {{ todo.tag }} -- {{todo.due_date}}</li>
-            {% endfor %}
-        </ul>
-        
-    </section> 
-{% endblock body %}
-    
+<div class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold text-gray-800 dark:text-slate-100 mb-6 tracking-tight text-center">My Todos</h1>
 
-    
+    <div> {# This replaces the old <ul> #}
+        {% for todo in todos %}
+            <div class="mb-3 p-4 rounded-md shadow-sm bg-white dark:bg-slate-800 hover:dark:bg-slate-700/70 dark:border dark:border-slate-700/80 hover:dark:border-slate-600 transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-px flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                <p class="text-lg text-gray-900 dark:text-slate-100 font-medium tracking-tight mb-2 sm:mb-0 flex-grow">{{ todo }}</p> {# Added flex-grow here #}
+                
+                <div class="flex flex-col sm:flex-row sm:items-center sm:space-y-2 sm:space-x-4 md:space-y-0 text-sm text-gray-600 dark:text-slate-400"> {# Adjusted spacing for better responsiveness #}
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-200/50 text-slate-700 dark:bg-slate-700/50 dark:text-slate-300 whitespace-nowrap">{{ todo.status }}</span>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300 whitespace-nowrap">{{ todo.tag }}</span>
+                    <span class="whitespace-nowrap">Due: {{ todo.due_date }}</span>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-gray-500 dark:text-gray-400 text-center py-5">You have no todos!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock body %}

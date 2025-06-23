@@ -3,107 +3,165 @@
 {% load static %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'mj/home.css' %}">
-<link rel="stylesheet" href="{% static 'mj/header.css' %}">
+
 {% endblock css %}
 
 {% block body %}
 {% include 'mj/header.html' %}
-<section>
-    
-    {% if messages %}
-        <div class="error-msg">
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        </div>
-    {% endif %}
-        
-    
-    <form action="{% url 'search' %}" method="GET" value="{{request.GET.q}}" class="form">
-        <div class="search">            
-            <input type="text" name="q" id="" value="{{request.GET.q}}">            
-            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>            
-        </div>
-    </form>
-    
-    {% block pinform %}
-        {% include 'mj/pin-input.html' %}
-    {% endblock pinform %}
-        
-    
-    <div class="books">
-        <a class="book" href="{% url 'm-journals' %}"><p>Merryy</p></a>
-        <a class="book" href="{% url 'g-journals' %}"><p>Gloomy</p></a>
-        <a class="book covert"><p>Covert</p></a>   
-    </div>
 
-    
-    <div class="journals">
-        {% block content %}
-        
-            {% for journal in journals %}
-                {% block j-content %}
-                    {% if journal.mood_tag == 'ME' %}
-                    
-                        <div class="j1 s">
-                            <a href="{% url 'view-j' journal.id %}"> 
-                                <div class="txt">
-                                    <h4>{{journal.title}}</h4>
-                                    <div class="txt-b">
-                                        <h2>{{journal.date_added}}</h2>
-                                        <i class="fa-solid fa-angle-right"></i>
-                                    </div>
-                                </div> 
-                            </a>
-                        </div>
-                
-                    {% endif %}
-                    {% if journal.mood_tag == 'GL' %}
-                        <div class="j1 c">
-                            <a href="{% url 'view-j' journal.id %}"> 
-                                <div class="txt">
-                                    <h4>{{journal.title}}</h4>
-                                    <div class="txt-b">
-                                        <h2>{{journal.date_added}}</h2>
-                                        <i class="fa-solid fa-angle-right"></i>
-                                    </div>
-                                </div> 
-                            </a>
-                        </div>
-                    {% endif %}
-                {% endblock j-content %}
-
-            {% empty %}
-                <h2> Sorry, no journal entry found 
-                {% if 'g' in request.path  %}
-                    in the Gloomy journal log.
-                {% elif 'm' in request.path%}
-                    in the Merry journal log.
-                {% elif 'c' in request.path%}
-                    in the Covert journal log.
-                {% else %}
-                    retry or make a new entry.
-                {% endif %}</h2>
-                    
-            {% endfor %}
-
-        {% endblock content %}    
-       
-        
-    </div>
-    
-    <footer>
-        <a href="{% url 'create-j' %}">
-            <div class="foot-pen">
-                <i class="fa-solid fa-pen"></i>
+<div class="container mx-auto p-4" x-data="{ showPinModal: {% if request.GET.display %}true{% else %}false{% endif %}, pinFormAction: '{% url 'c-journals' %}' }">
+    <section>
+        <form action="{% url 'search' %}" method="GET" class="my-8 flex items-center justify-center">
+            <div class="flex items-center rounded-md w-1/2 shadow-sm dark:shadow-none dark:border dark:border-slate-700 overflow-hidden">
+                <input type="text" name="q" value="{{request.GET.q}}" placeholder="Search journals..." class="appearance-none bg-transparent dark:bg-slate-800 h-12 px-4 text-gray-700 dark:text-slate-100 dark:placeholder-slate-400 leading-tight focus:outline-none focus:ring-0 flex-grow">            
+                <button type="submit" class="bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 h-12 px-4 transition-all duration-200 ease-in-out hover:opacity-80 hover:scale-105 active:scale-95">
+                    <i class="fa-solid fa-magnifying-glass text-slate-500 dark:text-slate-300"></i>
+                </button>            
             </div>
-        </a>
-    </footer>
+        </form>
+        
+        <div class="my-4">
+            {% block pinform %}
+                {% include 'mj/pin-input.html' %}
+            {% endblock pinform %}
+        </div>
+            
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-10">
+            <a href="{% url 'm-journals' %}" class="block p-6 rounded-md shadow-sm bg-white dark:bg-slate-800 hover:dark:bg-slate-700/70 dark:border dark:border-slate-700/80 hover:dark:border-slate-600 transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-sun fa-lg text-yellow-400 dark:text-yellow-300"></i>
+                    <p class="text-lg font-semibold text-gray-800 dark:text-slate-100">Merryy</p>
+                </div>
+            </a>
+            <a href="{% url 'g-journals' %}" class="block p-6 rounded-md shadow-sm bg-white dark:bg-slate-800 hover:dark:bg-slate-700/70 dark:border dark:border-slate-700/80 hover:dark:border-slate-600 transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-cloud fa-lg text-gray-400 dark:text-gray-300"></i>
+                    <p class="text-lg font-semibold text-gray-800 dark:text-slate-100">Gloomy</p>
+                </div>
+            </a>
+            <a href="#" @click.prevent="showPinModal = true" class="covert block p-6 rounded-md shadow-sm bg-white dark:bg-slate-800 hover:dark:bg-slate-700/70 dark:border dark:border-slate-700/80 hover:dark:border-slate-600 transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-1">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-user-secret fa-lg text-indigo-400 dark:text-indigo-300"></i>
+                    <p class="text-lg font-semibold text-gray-800 dark:text-slate-100">Covert</p>
+                </div>
+            </a>   
+        </div>
+
+        <div class="mt-8 max-h-[60vh] overflow-y-auto journals-list"  x-data="{ 
+            loading: false, 
+            hasNext: {% if page_obj.has_next %}true{% else %}false{% endif %},
+            nextUrl: '{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% endif %}',
+            async loadMore() {
+            if (this.loading || !this.hasNext) return;
+            this.loading = true;
+            try {
+                const response = await fetch(this.nextUrl);
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                const newJournals = doc.querySelectorAll('#journals-container > a');
+                const container = document.querySelector('#journals-container');
+                newJournals.forEach(journal => {
+                container.appendChild(journal.cloneNode(true));
+                });
+                
+                // Update pagination info from the response
+                const nextPageData = doc.querySelector('[data-has-next]');
+                if (nextPageData) {
+                this.hasNext = nextPageData.dataset.hasNext === 'true';
+                this.nextUrl = nextPageData.dataset.nextUrl || '';
+                } else {
+                this.hasNext = false;
+                this.nextUrl = '';
+                }
+            } catch (error) {
+                console.error('Failed to load more journals:', error);
+            } finally {
+                this.loading = false;
+            }
+            }
+        }" x-init="
+            const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                loadMore();
+            }
+            }, { threshold: 0.1 });
+            observer.observe($refs.loadTrigger);
+        " @scroll.window="
+            const scrollContainer = $el;
+            if (scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight - 10) {
+            loadMore();
+            }
+        ">
+            {% block content %}
+            <div class="sticky top-0 bg-gray-900 z-10 p-4">
+            <h1 class="text-3xl font-bold dark:text-slate-100 tracking-tight text-left text-blue-600">All Journals</h1>
+            </div>
+            <div class="p-4">
+            <div id="journals-container">
+                {% for journal in journals %}
+                {% block j-content %}
+                {% if journal.mood_tag == 'CO' %}
+                    <a @click.prevent="showPinModal = true; pinFormAction = '{% url 'view-j' journal.id %}'" class="block mb-4 p-4 rounded-md shadow-sm bg-white dark:bg-slate-800 hover:dark:bg-slate-700/70 dark:border dark:border-slate-700/80 hover:dark:border-slate-600 transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-px">
+                {% else %}
+                    <a href="{% url 'view-j' journal.id %}" class="block mb-4 p-4 rounded-md shadow-sm bg-white dark:bg-slate-800 hover:dark:bg-slate-700/70 dark:border dark:border-slate-700/80 hover:dark:border-slate-600 transition-all duration-200 ease-in-out hover:shadow-lg hover:-translate-y-px">
+                {% endif %}
+                    <div class="flex items-center space-x-3">
+                        <span class="w-3 h-12 rounded-full inline-block
+                        {% if journal.mood_tag == 'CO' %} bg-[rgba(255,65,82,255)]
+                        {% elif journal.mood_tag == 'ME' %} bg-[rgb(79,134,247)]
+                        {% elif journal.mood_tag == 'GL' %} bg-[rgba(255,228,211,255)]
+                        {% else %} bg-gray-300 {% endif %}">
+                        </span>
+                        <div class="flex-grow">
+                            <div class="flex justify-between items-start">
+                                <h4 class="text-lg font-semibold text-gray-800 dark:text-slate-100 mb-1 tracking-tight">{{journal.title}}</h4>
+                            </div>
+                            <div class="flex justify-between items-center text-sm text-gray-600 dark:text-slate-400">
+                                <span>{{journal.date_added}}</span>
+                                <i class="fa-solid fa-angle-right text-gray-500 dark:text-slate-500"></i>
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+                {% endblock j-content %}
+                {% empty %}
+                    <h2 class="text-gray-500 dark:text-gray-400 text-center py-10 text-lg">
+                        Sorry, no journal entry found please retry or make a new entry.
+                    </h2>
+                {% endfor %}
+            </div>
+            
+            <!-- Hidden pagination data for JS -->
+            <div class="hidden" 
+                 data-has-next="{% if page_obj.has_next %}true{% else %}false{% endif %}"
+                 data-next-url="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% endif %}">
+            </div>
+            
+            <!-- Loading indicator -->
+            <div x-show="loading" class="text-center py-4">
+                <i class="fa-solid fa-spinner fa-spin text-gray-500 dark:text-gray-400"></i>
+                <span class="ml-2 text-gray-500 dark:text-gray-400">Loading more journals...</span>
+            </div>
+
+            
+            <!-- Load trigger -->
+            <div x-ref="loadTrigger" class="h-4"></div>
+            </div>
+            {% endblock content %}    
+        </div>
+    </section>
+</div>
+
+<footer class="fixed bottom-6 right-6">
+    <a href="{% url 'create-j' %}" class="group">
+        <div class="bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 text-white font-bold w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl dark:shadow-indigo-500/30 transition-all duration-200 ease-in-out transform group-hover:-translate-y-1 group-hover:scale-105 group-active:scale-95">
+            <i class="fa-solid fa-pen text-xl"></i>
+    </a>
+</footer>
     
-</section>
 {% endblock body %}
+
 {% block script %}
 <script src="{% static 'mj/home.js' %}"></script>
 {% endblock script %}
-    

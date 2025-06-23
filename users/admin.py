@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Covertuser
+from .models import UserProfile
 
 # Register your models here.
-admin.site.register(Covertuser)
+admin.site.register(UserProfile)
