@@ -5,4 +5,5 @@ db*
 .vs*
 static
 .vercel
+.cache
 Pipfile.lock
