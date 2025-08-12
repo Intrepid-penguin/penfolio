@@ -7,7 +7,6 @@ from .models import UserProfile
 
 
 class UserRegisterForm(SignupForm):
-    email = forms.EmailField()
     
     def save(self, request):
         user = super().save(request)
@@ -24,4 +23,4 @@ class CovertuserForm(forms.ModelForm):
         )
     class Meta:
         model = UserProfile
-        fields = ['pin']       
+        fields = ['pin']

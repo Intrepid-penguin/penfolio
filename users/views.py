@@ -28,6 +28,7 @@ class RegisterView(SignupView):
         self.object = None
         form = self.get_form()
         pin_form = CovertuserForm(request.POST)
+        print(form.is_valid(), 'not valid')
         
         if form.is_valid() and pin_form.is_valid():
             return self.form_valid(form, pin_form)
@@ -40,6 +41,7 @@ class RegisterView(SignupView):
         print(response)
         user = self.user
         pin = make_password(pin_form.cleaned_data['pin'])
+        print(user)
         user.user_profile.pin = pin
         user.user_profile.save()
         

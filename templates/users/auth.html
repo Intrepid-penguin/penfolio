@@ -11,6 +11,23 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="{% static 'mj/auth.css' %}">
     <style>
+        .form-errors-custom {
+            background-color: #ef4444; /* red-500 */
+            color: white;
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem; /* p-4 */
+            margin-top: 1rem; /* my-4 */
+            margin-bottom: 1rem; /* my-4 */
+        }
+        .form-errors-custom p {
+            font-weight: bold;
+        }
+        .form-errors-custom ul {
+            list-style-type: disc;
+            list-style-position: inside;
+            margin-left: 1rem;
+            font-weight: bold;
+        }
         [x-cloak] {
             display: none !important;
         }
@@ -61,7 +78,21 @@
                     </div>
 
                     <div>
-                        <small>{{ form.errors }}</small>
+                        {% if form.errors %}
+                            <div class="form-errors-custom">
+                                <p>Error:</p>
+                                <ul>
+                                {% for error in form.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
                     </div>
 
                     <div>
@@ -105,10 +136,30 @@
                     </div>
 
                     <div>
-                        <small>{{ sign_up_form.username.errors}}</small>
-                        <small>{{ pin_form.username.errors}}</small>
+                        {% if sign_up_form.errors or pin_form.errors %}
+                            <div class="form-errors-custom">
+                                <p>Error:</p>
+                                <ul>
+                                {% for error in sign_up_form.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                                {% for field in sign_up_form %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in pin_form.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                                {% for field in pin_form %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
                     </div>
-                    
                     <div>
                         <button type="submit">Sign-up</button>
                         <small>Already have an account? <a x-on:click="signIn = true; signUp = false; pageTitle = 'Login Page'">Sign-in</a> or use <a href="accounts/twitter_oauth2/login/?process=signin">Twitter</a></small>

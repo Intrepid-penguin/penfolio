@@ -21,6 +21,7 @@ ntscraper = "*"
 snscrape = "*"
 twscrape = "*"
 google-genai = "*"
+psycopg = "*"
 
 [dev-packages]
 
