@@ -10,7 +10,8 @@ from .views import(
                    Search,
                    deleteJournal,
                    custom_markdownx_upload,
-                    TweetJournalView as tweetify_view
+                    TweetJournalView as tweetify_view,
+                    StreakView
                 ) 
 
 urlpatterns = [
@@ -25,4 +26,5 @@ urlpatterns = [
     path('journal/<int:pk>/tweetify/', tweetify_view.as_view(), name='tweetify'),
     path('search/', Search.as_view(), name='search'),
     path('markdownx/upload/', custom_markdownx_upload, name='markdownx_upload'),
+    path('streaks/', StreakView.as_view(), name='streaks'),
 ]

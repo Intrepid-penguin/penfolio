@@ -4,16 +4,21 @@
         <!-- Logo -->
         <a href="{% url 'home' %}" class="text-xl font-bold tracking-tight transition-opacity duration-200 ease-in-out hover:opacity-75">Pen<span><i class="fa-solid fa-code px-1"></i></span>Folio</a>
 
-        <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-4" x-data="{ open: false }">
             <a href="{% url 'create-j' %}" class="transition-all duration-200 ease-in-out hover:opacity-75 active:opacity-90 hover:scale-110 active:scale-100">
                 <i class="fa-solid fa-pen text-lg"></i>
             </a>
             <a href="{% url 'log-out' %}" class="transition-all duration-200 ease-in-out hover:opacity-75 active:opacity-90 hover:scale-110 active:scale-100">
                 <i class="fa-solid fa-sign-out-alt text-lg"></i>
             </a>
-            <button class="transition-all duration-200 ease-in-out hover:opacity-75 active:opacity-90 hover:scale-110 active:scale-100">
-                <i class="fa-solid fa-bars text-lg"></i>
-            </button>
+            <div class="relative">
+                <button @click="open = !open" class="transition-all duration-200 ease-in-out hover:opacity-75 active:opacity-90 hover:scale-110 active:scale-100">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+                <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-md shadow-lg py-1 z-10">
+                    <a href="{% url 'streaks' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-700">Streaks</a>
+                </div>
+            </div>
         </div>
     </div>
 </nav>

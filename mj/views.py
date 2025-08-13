@@ -16,6 +16,8 @@ from django.http import JsonResponse
 from django.views import View
 from django.utils.http import urlencode
 from .utils import generate_tweet, get_twitter_inspo
+from collections import defaultdict
+from datetime import date
 
 
 
@@ -290,7 +292,51 @@ class listCJournal(UserPassesTestMixin, JournalBaseListView):
     def get_queryset(self):
         user = get_object_or_404(User, username=self.request.user)
         return Journal.objects.filter(owner=user, mood_tag='CO').order_by('-date_added')
-    
+
+class StreakView(LoginRequiredMixin, View):
+    template_name = 'mj/streak.html'
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        user_profile, created = UserProfile.objects.get_or_create(user=user)
+        
+        journals = Journal.objects.filter(owner=user).order_by('date_added')
+        
+        contributions = defaultdict(int)
+        for journal in journals:
+            contributions[journal.date_added.date()] += 1
+            
+        today = date.today()
+        start_date = today - timedelta(days=365)
+        
+        # Generate a list of all days in the past year
+        days_data = []
+        current_date = start_date
+        while current_date <= today:
+            days_data.append({
+                'date': current_date,
+                'count': contributions.get(current_date, 0)
+            })
+            current_date += timedelta(days=1)
+        
+        # Get month names for the header
+        month_names = []
+        last_month = -1
+        for day_data in days_data:
+            day = day_data['date']
+            if day.month != last_month:
+                month_names.append(day.strftime('%b'))
+                last_month = day.month
+
+        context = {
+            'current_streak': user_profile.current_streak,
+            'longest_streak': user_profile.longest_streak,
+            'days_data': days_data,
+            'month_names': month_names,
+            'today': today,
+        }
+        
+        return render(request, self.template_name, context)
 
 class Search(JournalBaseListView):
     context_object_name = 'results'

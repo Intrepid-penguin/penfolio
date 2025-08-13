@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Pen-Folio</title>
     <link rel="icon" href="https://res.cloudinary.com/dh9zsffcy/image/upload/v1737688358/fav_rv9tu7.jpg" type="image/x-icon">
-    {% comment %} <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script> {% endcomment %}
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script> 
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.10/dist/cdn.min.js"></script>
 </head>
@@ -21,14 +21,16 @@
 
         {% endblock body %}
         {% if messages %} 
+            <div class="fixed bottom-3.5 right-32 z-50 space-y-3">
             {% for message in messages %}
-            <div x-data="{ showMessage: true }" x-show="showMessage" x-init="setTimeout(() => showMessage = false, 3000)" class="absolute flex items-center gap-4 bottom-3.5 right-32 w-fit min-w-96 {% if message.tags == 'success' %}bg-green-100 border-green-400 text-green-700 dark:bg-green-800 dark:border-green-600 dark:text-green-200{% elif message.tags == 'info' %}bg-yellow-100 border-yellow-400 text-yellow-700 dark:bg-yellow-800 dark:border-yellow-600 dark:text-yellow-200{% else %}bg-red-100 border-red-400 text-red-700 dark:bg-red-800 dark:border-red-600 dark:text-red-200{% endif %} border px-4 py-3 rounded my-4" role="alert">
+            <div x-data="{ showMessage: true }" x-show="showMessage" x-init="setTimeout(() => showMessage = false, 3000)" class="flex items-center gap-4 w-fit min-w-96 {% if message.tags == 'success' %}bg-green-100 border-green-400 text-green-700 dark:bg-green-800 dark:border-green-600 dark:text-green-200{% elif message.tags == 'info' %}bg-yellow-100 border-yellow-400 text-yellow-700 dark:bg-yellow-800 dark:border-yellow-600 dark:text-yellow-200{% else %}bg-red-100 border-red-400 text-red-700 dark:bg-red-800 dark:border-red-600 dark:text-red-200{% endif %} border px-4 py-3 rounded my-4" role="alert">
                 <button @click="showMessage = false" class="{% if message.tags == 'success' %}text-green-500 hover:text-green-700 dark:text-green-300 dark:hover:text-green-100 hover:bg-green-200 dark:hover:bg-green-700{% elif message.tags == 'info' %}text-yellow-500 hover:text-yellow-700 dark:text-yellow-300 dark:hover:text-yellow-100 hover:bg-yellow-200 dark:hover:bg-yellow-700{% else %}text-red-500 hover:text-red-700 dark:text-red-300 dark:hover:text-red-100 hover:bg-red-200 dark:hover:bg-red-700{% endif %} rounded-full w-6 h-6 flex items-center justify-center transition-all duration-200 ease-in-out hover:scale-110 active:scale-95">
-                    <i class="fa-solid fa-xmark text-lg"></i>
+                <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
                 <p class='font-bold'>{{ message }}</p>
             </div>
             {% endfor %}
+            </div>
          {% endif %}
     </main>
     
