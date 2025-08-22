@@ -22,6 +22,12 @@ from datetime import date
 
 
 # Create your views here
+class HomePage(View):
+    template_name='home.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
 class JournalBaseListView(LoginRequiredMixin, ListView):
     model = Journal
     context_object_name = 'journals'
@@ -47,13 +53,14 @@ class JournalBaseListView(LoginRequiredMixin, ListView):
             return Journal.objects.filter(owner=user, mood_tag=self.mood_tag).order_by('-date_added')
         return Journal.objects.filter(owner=user).order_by('-date_added')
 
-class home(JournalBaseListView):
+class Dashboard(JournalBaseListView):
     fields = ['title', 'date_added', 'mood_tag']
-    template_name = 'mj/home.html'
+    template_name = 'mj/dashboard.html'
+
 class CreateJournalView(LoginRequiredMixin, CreateView):
     template_name = 'mj/create.html'
     form_class = journalform
-    success_url = '/'
+    success_url = '/dashboard/'
     
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -182,7 +189,7 @@ class TweetJournalView(LoginRequiredMixin, UserPassesTestMixin, View):
 
     def handle_no_permission(self):
         messages.error(self.request, "You are not authorized to tweet this journal, or it is a covert journal.")
-        return redirect('home')
+        return redirect('dashboard')
 
     def get_journal(self):
         if not hasattr(self, '_journal'):
@@ -233,7 +240,7 @@ class updateJournal(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     
 class deleteJournal(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Journal
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('dashboard')
     
     def test_func(self):
         journal = self.get_object()
@@ -262,7 +269,7 @@ class listCJournal(UserPassesTestMixin, JournalBaseListView):
             case 'g-journals':
                 return 'mj/g-journal.html'
             case _:
-                return 'mj/home.html'
+                return 'mj/dashboard.html'
         
     def get_route_name(self):
         route_name = self.request.META.get('HTTP_REFERER')

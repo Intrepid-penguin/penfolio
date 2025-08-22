@@ -235,6 +235,6 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL ='account_login'
-LOGIN_REDIRECT_URL ='home'
+LOGIN_REDIRECT_URL ='dashboard'
 
 TAILWIND_APP_NAME='theme'

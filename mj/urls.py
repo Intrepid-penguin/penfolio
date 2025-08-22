@@ -1,21 +1,23 @@
 from django.urls import path
-from .views import( 
-                   home,
-                   CreateJournalView as createjournalview,
-                   viewJournal, 
-                   updateJournal, 
-                   MerryJournal, 
-                   GloomyJournal,
-                   listCJournal,
-                   Search,
-                   deleteJournal,
-                   custom_markdownx_upload,
-                    TweetJournalView as tweetify_view,
-                    StreakView
-                ) 
+from .views import ( 
+        HomePage,
+        Dashboard,
+        CreateJournalView as createjournalview,
+        viewJournal, 
+        updateJournal, 
+        MerryJournal, 
+        GloomyJournal,
+        listCJournal,
+        Search,
+        deleteJournal,
+        custom_markdownx_upload,
+        TweetJournalView as tweetify_view,
+        StreakView
+    ) 
 
 urlpatterns = [
-    path('', home.as_view(), name='home'),
+    path('', HomePage.as_view(), name='home-page'),
+    path('dashboard/', Dashboard.as_view(), name='dashboard'),
     path('create/', createjournalview.as_view(), name='create-j'),
     path('journal/<int:pk>', viewJournal.as_view(), name='view-j' ),
     path('update/<int:pk>', updateJournal.as_view(), name='update-j'),

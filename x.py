@@ -144,7 +144,7 @@
 
 #         # --- 5. Redirect to Success Page ---
 #         messages.success(request, f'Authorization successful for {screen_name}!')
-#         return redirect('home')
+#         return redirect('dashboard')
 
 #     except Exception as e:
 #         logger.exception("Error during Twitter callback handling:")

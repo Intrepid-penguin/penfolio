@@ -5,15 +5,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block meta-tags %}
     {% tailwind_css %}
     {% block css %}{% endblock css %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Pen-Folio</title>
     <link rel="icon" href="https://res.cloudinary.com/dh9zsffcy/image/upload/v1737688358/fav_rv9tu7.jpg" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script> 
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.10/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    {% endblock meta-tags %}
 </head>
+{% block internal %}
 <body class="font-sans antialiased dark:bg-gray-900 dark:text-gray-200" onload="time()">
     <main class='h-screen'>
         
@@ -37,4 +42,5 @@
 
     {% block script %}{% endblock script %}
 </body>
+{% endblock internal %}
 </html>

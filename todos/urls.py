@@ -3,5 +3,5 @@ from .views import TodoListView
 
 
 urlpatterns = [
-    path('', TodoListView.as_view(), name='todo-home'),
+    path('', TodoListView.as_view(), name='todo-dashboard'),
 ]
