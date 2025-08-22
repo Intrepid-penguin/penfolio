@@ -22,9 +22,12 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd project/penfolio
-            pwd
+            cd "$TARGET_DIR"
             git pull
+            source .venv/bin/activate
+            uv pip install -r requirements.txt
+            ./manage.py makemigrations
+            ./manage.py migrate
             sudo systemctl restart penfolio
             sudo systemctl reload nginx
         env:
