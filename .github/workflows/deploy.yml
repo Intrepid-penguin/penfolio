@@ -25,7 +25,7 @@ jobs:
             cd p*/p*
             git pull
             source .venv/bin/activate
-            uv pip install -r requirements.txt
+            pip install -r requirements.txt
             ./manage.py makemigrations
             ./manage.py migrate
             sudo systemctl restart penfolio
