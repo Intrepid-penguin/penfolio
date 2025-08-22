@@ -22,7 +22,12 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+<<<<<<< HEAD
             cd p*/p*
+=======
+            cd /home/projects/penfolio
+            pwd
+>>>>>>> 550b425 (Update deployment script target directory)
             git pull
             source .venv/bin/activate
             pip install -r requirements.txt
