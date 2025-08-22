@@ -22,7 +22,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd "$TARGET_DIR"
+            cd $TARGET_DIR
             git pull
             source .venv/bin/activate
             uv pip install -r requirements.txt
