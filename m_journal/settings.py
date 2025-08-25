@@ -35,6 +35,8 @@ DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
 EMAIL_PORT= 587
 EMAIL_USE_TLS=True
 
+DB_PORT = os.environ.get('DB_PORT')
+
 if not ENCRYPTION_KEY:
     raise ValueError("ENCRYPTION_KEY must be set in the environment variables.")
 
@@ -157,7 +159,7 @@ DATABASES = {
         'USER': tmpPostgres.username,
         'PASSWORD': tmpPostgres.password,
         'HOST': tmpPostgres.hostname,
-        'PORT': 5432,
+        'PORT': DB_PORT,
     }
 }
 
