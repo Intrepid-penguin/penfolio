@@ -160,6 +160,7 @@ DATABASES = {
         'PASSWORD': tmpPostgres.password,
         'HOST': tmpPostgres.hostname,
         'PORT': DB_PORT,
+        'OPTIONS': {'ssl_mode': 'DISABLED'}
     }
 }
 
