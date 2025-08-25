@@ -36,6 +36,7 @@ EMAIL_PORT= 587
 EMAIL_USE_TLS=True
 
 DB_PORT = os.environ.get('DB_PORT')
+PATH_TO_CERT = os.environ.get('PATH_TO_CERT')
 
 if not ENCRYPTION_KEY:
     raise ValueError("ENCRYPTION_KEY must be set in the environment variables.")
@@ -160,7 +161,7 @@ DATABASES = {
         'PASSWORD': tmpPostgres.password,
         'HOST': tmpPostgres.hostname,
         'PORT': DB_PORT,
-        'OPTIONS': {'ssl_mode': 'DISABLED'}
+        'OPTIONS': {'sslmode': 'require', 'sslcert': PATH_TO_CERT}
     }
 }
 
