@@ -161,7 +161,6 @@ DATABASES = {
         'PASSWORD': tmpPostgres.password,
         'HOST': tmpPostgres.hostname,
         'PORT': DB_PORT,
-        'OPTIONS': {'sslmode': 'require', 'sslcert': PATH_TO_CERT}
     }
 }
 
