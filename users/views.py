@@ -15,7 +15,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 class RegisterView(SignupView):
     form_class = UserRegisterForm
     template_name = 'users/auth.html'
-    success_url = '/dashboard/'
+    success_url = '/'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
