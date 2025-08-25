@@ -3,6 +3,7 @@ import pandas as pd
 import random
 import tempfile
 import shutil
+import uuid
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -30,8 +31,10 @@ def scrape_nitter(username='Lf_tobs', max_scrolls=5, proxy=None):
   Returns:
     pandas.DataFrame: A DataFrame containing the scraped tweet data.
   """
-  
-  temp_dir = tempfile.mkdtemp()
+  # Create unique temporary directory with timestamp and UUID
+  unique_id = str(uuid.uuid4())[:8]
+  timestamp = str(int(time.time()))
+  temp_dir = tempfile.mkdtemp(prefix=f'chrome_profile_{timestamp}_{unique_id}_')
   driver = None
   try:
     print("Setting up the WebDriver...")
@@ -51,8 +54,10 @@ def scrape_nitter(username='Lf_tobs', max_scrolls=5, proxy=None):
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
     options.add_argument(f'--user-data-dir={temp_dir}')
+    options.add_argument('--remote-debugging-port=0')
 
-    options.add_argument("window-size=1920,1080")
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument("--disable-blink-features=AutomationControlled")
     
     driver = webdriver.Chrome(service=service, options=options)
