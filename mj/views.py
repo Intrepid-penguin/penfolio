@@ -209,7 +209,7 @@ class TweetJournalView(LoginRequiredMixin, UserPassesTestMixin, View):
         
         if x_user_tweet is None:
             messages.error(request, f"Could not find tweets for user {x_user_inspo} or user doesn't exist.")
-            return redirect('j-detail', pk=journal.pk)
+            return redirect('view-j', pk=journal.pk)
         
         tweet = generate_tweet(x_user_tweet, journal.content)
         print(f"Generated tweet: {tweet}")
@@ -223,7 +223,7 @@ class TweetJournalView(LoginRequiredMixin, UserPassesTestMixin, View):
 
     def get(self, request, *args, **kwargs):
         pk = self.kwargs.get('pk')
-        return redirect('j-detail', pk=pk)
+        return redirect('view-j', pk=pk)
      
 class updateJournal(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Journal
