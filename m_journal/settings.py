@@ -36,7 +36,6 @@ EMAIL_PORT= 587
 EMAIL_USE_TLS=True
 
 DB_PORT = os.environ.get('DB_PORT')
-PATH_TO_CERT = os.environ.get('PATH_TO_CERT')
 
 if not ENCRYPTION_KEY:
     raise ValueError("ENCRYPTION_KEY must be set in the environment variables.")
@@ -81,6 +80,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.twitter_oauth2',
     'widget_tweaks',
+    'corsheaders',
     'markdownx',
     'cloudinary_storage',
     'cloudinary',
@@ -94,6 +94,10 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -232,6 +236,29 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# CORS Configuration
+CORS_ALLOWED_ORIGINS = [
+    "https://penfolio.duckdns.org",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+]
+
+CORS_ALLOW_HEADERS = [
+    "authorization",
+    "content-type",
+]
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
