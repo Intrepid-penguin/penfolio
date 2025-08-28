@@ -22,6 +22,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            set -e
             cd p*/p*
             git pull
             source .venv/bin/activate
