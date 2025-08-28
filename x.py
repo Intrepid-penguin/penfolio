@@ -54,7 +54,7 @@ def scrape_nitter(username='Lf_tobs', max_scrolls=5, proxy=None):
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
     options.add_argument(f'--user-data-dir={temp_dir}')
-    options.add_argument('--remote-debugging-port=0')
+    options.add_argument('--remote-debugging-port=9222')
 
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--disable-blink-features=AutomationControlled")
