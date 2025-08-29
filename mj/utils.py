@@ -90,7 +90,7 @@ You are an expert social media content generator with a keen eye for subtle styl
 
 **Output Requirement:**
 
-Your response must contain **ONLY** the generated tweet text. Do not include any introductory remarks, style analysis, or additional commentary.
+Your response must short and contain **ONLY** the generated tweet text. Do not include any introductory remarks, style analysis, or additional commentary.
 """
 
 
