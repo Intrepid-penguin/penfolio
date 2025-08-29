@@ -89,6 +89,7 @@ You are an expert social media content generator with a keen eye for subtle styl
     *   **Conciseness:** The generated tweet should be concise and fit within typical tweet length (ideally under 280 characters, but prioritize the *observed* typical length from the user's past tweets).
 
 **Output Requirement:**
+Your response should be a single tweet text that reflects the user's unique style while conveying the essence of the journal entry. Do not include any explanations, justifications, or additional commentary—only the tweet text itself.
 
 Your response must short and contain **ONLY** the generated tweet text. Do not include any introductory remarks, style analysis, or additional commentary.
 """
