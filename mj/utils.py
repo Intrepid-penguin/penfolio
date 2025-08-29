@@ -13,7 +13,7 @@ import os
 from google import genai
 from google.genai import types
 
-from x import scrape_nitter
+from x import scrape_x
 
 client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
@@ -25,8 +25,7 @@ USER_AGENTS = [
 ]
 
 def get_twitter_inspo(username: str, scrolls: int = 10, proxy: str = None):
-  SCROLLS = 10
-  PROXY = None
+  
   existing_cache = user_exists_in_cache(username)
   cache_dir = ".cache"
   
@@ -36,7 +35,7 @@ def get_twitter_inspo(username: str, scrolls: int = 10, proxy: str = None):
     cache_file = os.path.join(cache_dir, f"{username}.json")
     return pd.read_json(cache_file, orient="records").to_json()
   
-  tweet_df = scrape_nitter(username, SCROLLS, proxy=PROXY)
+  tweet_df = scrape_x(username, scrolls, proxy)
   
   if not tweet_df.empty:
     print("\n--- Scraped Data (First 5 Rows as JSON) ---")
