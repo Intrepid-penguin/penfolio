@@ -1,5 +1,5 @@
 from django.shortcuts import redirect
-from allauth.account.views import SignupView
+from allauth.account.views import SignupView, LoginView
 from .forms import UserRegisterForm, CovertuserForm
 from django.contrib import messages
 from django.db import transaction
@@ -15,7 +15,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 class RegisterView(SignupView):
     form_class = UserRegisterForm
     template_name = 'users/auth.html'
-    success_url = '/dashboard/'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -28,7 +27,7 @@ class RegisterView(SignupView):
         self.object = None
         form = self.get_form()
         pin_form = CovertuserForm(request.POST)
-        print(form.is_valid(), 'not valid')
+        # print(form.is_valid(), 'not valid')
         
         if form.is_valid() and pin_form.is_valid():
             return self.form_valid(form, pin_form)
@@ -62,3 +61,7 @@ class LogoutView(LoginRequiredMixin, View):
     def post(self, request):
         logout(request)
         return redirect('account_login')
+
+class UserLoginView(LoginView):
+    # form_class = UserLoginForm
+    template_name = 'users/auth.html'

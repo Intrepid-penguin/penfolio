@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from allauth.account.forms import SignupForm
+from allauth.account.forms import SignupForm, LoginForm
 from django import forms
 from .models import UserProfile
 
@@ -24,3 +24,11 @@ class CovertuserForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['pin']
+
+# class UserLoginForm(LoginForm):
+#     def __init__(self, *args, **kwargs):
+#         super(UserLoginForm, self).__init__(*args, **kwargs)
+#         # del self.fields['login']
+
+#     def login(self, *args, **kwargs):
+#         return super(UserLoginForm, self).login(*args, **kwargs)

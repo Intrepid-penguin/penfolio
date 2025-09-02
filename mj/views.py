@@ -1,4 +1,5 @@
 from datetime import timedelta, timezone
+from html import escape
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.views.generic import DetailView, CreateView, UpdateView, ListView, DeleteView
@@ -352,7 +353,8 @@ class Search(JournalBaseListView):
     
     def get_queryset(self):
         user = get_object_or_404(User, username=self.request.user)
-        q = self.request.GET.get('q')
+        q = escape(self.request.GET.get('q'))
+        print(q)
         if q is not None:
             query = Q(title__icontains=q) | Q(content__icontains=q)
         return Journal.objects.filter(query).distinct()

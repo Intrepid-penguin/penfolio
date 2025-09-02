@@ -6,5 +6,5 @@ from markdownx.admin import MarkdownxModelAdmin
 # Register your models here.
 
 
-admin.site.register(Journal, MarkdownxModelAdmin)
+# admin.site.register(Journal, MarkdownxModelAdmin)
 

@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.contrib.auth import views as auth_views
+from mj.views import HomePage
 from users import views as users_views
 from django.conf.urls.static import static
 from django.conf import settings
@@ -36,13 +37,11 @@ filtered_allauth_urls = [
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', auth_views.LoginView.as_view(template_name='users/auth.html'), name='account_login'),
-    path('signup/', users_views.RegisterView.as_view(), name='account_signup'),
-    path('logout/', users_views.LogoutView.as_view(), name='log-out'),
+    path('auth/', include('users.urls')),
     path('accounts/', include(filtered_allauth_urls)),
-    path('', include('mj.urls')),
+    path('', HomePage.as_view(), name='home-page'),
+    path('dashboard/', include('mj.urls')),
     path('todos/', include('todos.urls')),
-    # path('users/', include('users.urls')),
     path('markdownx/', include('markdownx.urls')),
     re_path(r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),
 ]

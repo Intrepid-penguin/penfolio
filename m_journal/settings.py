@@ -102,7 +102,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
-    "allauth.account.middleware.AccountMiddleware"
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'm_journal.urls'
@@ -132,12 +132,6 @@ AUTHENTICATION_BACKENDS = [
 
 SOCIALACCOUNT_PROVIDERS = {
     'twitter_oauth2': { 
-        # 'SCOPE': [
-        #     'offline.access',
-        #     'users.read',
-        #     'tweet.read',
-        # ],
-        # 'OAUTH_PKCE_ENABLED': True,
         'NAME': 'Penfolio',
         'APP': {
             'client_id': X_CLIENT_ID,
@@ -266,5 +260,8 @@ CORS_ALLOW_HEADERS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL ='account_login'
 LOGIN_REDIRECT_URL ='dashboard'
+
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+ACCOUNT_SIGNUP_FIELDS = ['username*', 'email', 'password1*', 'password2*', 'pin*' ]
 
 TAILWIND_APP_NAME='theme'
