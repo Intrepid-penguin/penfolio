@@ -6,4 +6,4 @@ db*
 static
 .vercel
 .cache
-Pipfile.lock
+
